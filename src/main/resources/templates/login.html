@@ -1,0 +1,28 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<div th:replace="fragments/header :: header (title='Login')"></div>
+<link rel="stylesheet" th:href="@{css/loginstyle.css}"/>
+
+
+<body>
+
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+
+
+        <!-- Login Form -->
+        <!--/*@thymesVar id="blogUser" type="com.csaba.blog.spring_blog.model.BlogUser"*/-->
+        <form action="#" th:action="@{/login}" th:object="${blogUser}" method="post">
+            <input type="text" id="username" class="fadeIn second" name="login" placeholder="username or email" th:field="*{username}">
+            <input type="password" id="password" class="fadeIn third" name="login" placeholder="password" th:field="*{password}">
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>
