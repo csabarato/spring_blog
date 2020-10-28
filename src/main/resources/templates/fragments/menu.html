@@ -10,7 +10,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" th:href="@{/user/list}">Users</a>
+            <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="nav-item nav-link" th:href="@{/user/list}">Users</a>
         </li>
         <li class="nav-item">
             <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:href="@{/logout}">Logout</a>
