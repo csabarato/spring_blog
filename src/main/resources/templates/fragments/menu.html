@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark"
+     xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     th:fragment="menu">
+
+
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="navbar-brand" href="#">
+                <img class="logo" style="width: 3rem; height: 3rem" th:src="@{/images/blog.svg}">
+            </a>
+        </li>
+        <li class="nav-item">
+            <a sec:authorize="hasAuthority('ADMIN')" class="nav-item nav-link" th:href="@{/user/list}">Users</a>
+        </li>
+        <li class="nav-item">
+            <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:href="@{/logout}">Logout</a>
+        </li>
+    </ul>
+</nav>
+
+

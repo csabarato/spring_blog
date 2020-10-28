@@ -9,8 +9,10 @@
 
 <div class="wrapper fadeInDown">
     <div id="formContent">
-        <!-- Tabs Titles -->
 
+        <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}">login error</span>
+        </div>
 
         <!-- Login Form -->
         <!--/*@thymesVar id="blogUser" type="com.csaba.blog.spring_blog.model.BlogUser"*/-->
