@@ -2,7 +2,7 @@
 
 
 <div th:replace="fragments/header :: header (title='Login')"></div>
-<link rel="stylesheet" th:href="@{css/loginstyle.css}"/>
+<link rel="stylesheet" th:href="@{/css/loginstyle.css}"/>
 
 
 <body>
@@ -21,6 +21,8 @@
             <input type="password" id="password" class="fadeIn third" name="login" placeholder="password" th:field="*{password}">
 
             <button type="submit" class="btn btn-primary">Login</button>
+            <a th:href="@{/register}" class="btn btn-secondary">Register</a>
+
         </form>
 
     </div>

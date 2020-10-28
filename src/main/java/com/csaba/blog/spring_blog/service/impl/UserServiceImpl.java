@@ -1,14 +1,19 @@
 package com.csaba.blog.spring_blog.service.impl;
 
+import com.csaba.blog.spring_blog.constants.Roles;
 import com.csaba.blog.spring_blog.model.BlogUser;
+import com.csaba.blog.spring_blog.repository.RoleRepository;
 import com.csaba.blog.spring_blog.repository.UserRepostitory;
 import com.csaba.blog.spring_blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service("userDetailsService")
@@ -18,8 +23,15 @@ public class UserServiceImpl implements UserService {
     private UserRepostitory userRepostitory;
 
     @Autowired
-    public UserServiceImpl(UserRepostitory userRepostitory) {
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+
+    private RoleRepository roleRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepostitory userRepostitory, RoleRepository roleRepository) {
         this.userRepostitory = userRepostitory;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -37,5 +49,23 @@ public class UserServiceImpl implements UserService {
         }
 
         return userOpt.get();
+    }
+
+    @Override
+    public BlogUser findUserByUsername(String username) {
+        return userRepostitory.findByUsername(username);
+    }
+
+    @Override
+    public BlogUser findUserByEmail(String email) {
+        return userRepostitory.findByEmail(email);
+    }
+
+    @Override
+    public BlogUser save(BlogUser user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name())));
+
+        return userRepostitory.save(user);
     }
 }

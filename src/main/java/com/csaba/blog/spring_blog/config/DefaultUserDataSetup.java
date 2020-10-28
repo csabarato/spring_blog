@@ -70,7 +70,7 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
 
-        Role roleAdmin = roleRepository.findByName(Roles.ROLE_USER.name());
+        Role roleAdmin = roleRepository.findByName(Roles.ROLE_ADMIN.name());
         user.setRoles(Collections.singletonList(roleAdmin));
 
         userRepostitory.save(user);
