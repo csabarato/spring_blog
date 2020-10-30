@@ -12,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -43,6 +44,9 @@ public class BlogUser implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
+
+    @OneToMany(mappedBy = "author")
+    private Set<BlogArticle> articles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
