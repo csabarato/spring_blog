@@ -1,6 +1,7 @@
 package com.csaba.blog.spring_blog.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -10,8 +11,9 @@ import javax.persistence.Id;
 
 @Entity
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class Role {
+public class Role extends AuditableEntity<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
