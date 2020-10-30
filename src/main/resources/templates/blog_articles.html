@@ -1,0 +1,27 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Blog articles')"></div>
+<link rel="stylesheet" th:href="@{/css/articleList.css}"/>
+
+<body>
+
+<div th:replace="fragments/menu"></div>
+
+<div th:each="article: ${articles}" class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title" th:text=" ${article.title}">Card title</h5>
+        <h6 class="card-subtitle mb-2 text-muted" th:text="${#dates.format(article.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
+        <p class="card-text" th:text="${article.text}">Text</p>
+        <h6>Categories</h6>
+        <ul th:each="category: ${article.categories}">
+            <li th:text="${category.name}">cat</li>
+        </ul>
+        <a href="#" class="card-link">Open</a>
+        <a href="#" class="card-link">Edit</a>
+    </div>
+</div>
+
+
+
+</body>
+</html>

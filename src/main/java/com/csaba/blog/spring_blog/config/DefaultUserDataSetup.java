@@ -143,7 +143,7 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
         article.setTitle("test 1");
         article.setText("test test asd");
         article.setAuthor(user1);
-
+        article.setCreatedAt(new Date());
         article.setCategories(new HashSet<>(Arrays.asList(categories.get(0), categories.get(1))));
 
         blogArticleRepository.save(article);
@@ -153,7 +153,7 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
         article2.setTitle("test 2");
         article2.setText("test test qwe");
         article2.setAuthor(user2);
-
+        article2.setCreatedAt(new Date());
         article2.setCategories(new HashSet<>(Arrays.asList(categories.get(2), categories.get(3))));
 
         blogArticleRepository.save(article2);

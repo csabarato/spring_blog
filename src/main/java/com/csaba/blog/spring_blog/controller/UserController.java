@@ -2,7 +2,6 @@ package com.csaba.blog.spring_blog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -13,10 +12,4 @@ public class UserController {
     public String getUserProfile() {
         return "profile";
     }
-
-    @PostMapping("/profile")
-    public String getUserProfilePostMethod() {
-        return "profile";
-    }
-
 }
