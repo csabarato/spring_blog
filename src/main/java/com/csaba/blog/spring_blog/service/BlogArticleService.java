@@ -7,4 +7,6 @@ import java.util.List;
 public interface BlogArticleService {
 
     List<BlogArticle> findAll();
+
+    BlogArticle save(BlogArticle blogArticle);
 }

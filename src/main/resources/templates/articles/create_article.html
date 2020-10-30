@@ -1,0 +1,58 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Write article')"></div>
+
+<style>
+    .container {
+        margin-top: 20px;
+        width: 30%;
+    }
+
+
+</style>
+
+<body>
+
+<div th:replace="fragments/menu"></div>
+
+<div class="container ">
+    <!--/*@thymesVar id="blogArticle" type="com.csaba.blog.spring_blog.model.BlogArticle"*/-->
+    <form action="#" th:action="@{/articles/new}" th:object="${blogArticle}" method="post">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Enter title" th:field="*{title}">
+
+            <div>
+                <span class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="text">Article text </label>
+            <textarea class="form-control" id="text" rows="3" placeholder="Enter text of your article" th:field="*{text}"></textarea>
+
+            <div>
+                <span class="text-danger" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox" th:each="cat : ${categories}">
+
+                <input type="checkbox" th:value="${cat}" th:field="*{categories}"/>
+                <label style="margin-left: 20px" th:text="${cat.name}">asd</label>
+            </div>
+
+            <div>
+                <span class="text-danger" th:if="${#fields.hasErrors('categories')}" th:errors="*{categories}"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+
+</div>
+
+</body>
+</html>

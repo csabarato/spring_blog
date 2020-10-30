@@ -25,6 +25,7 @@ public class BlogArticle extends AuditableEntity<String> {
     private String text;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @NotEmpty(message = "At least 1 category must be selected!")
     @JoinTable(
             joinColumns = @JoinColumn(name = "blog_article_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_name", referencedColumnName = "name")

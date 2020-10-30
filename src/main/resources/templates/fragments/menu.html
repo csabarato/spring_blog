@@ -16,6 +16,9 @@
             <a class="nav-item nav-link" th:href="@{/articles/list}">Blog articles</a>
         </li>
         <li class="nav-item">
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN,ROLE_USER')" class="nav-item nav-link" th:href="@{/articles/new}">Write article</a>
+        </li>
+        <li class="nav-item">
             <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:href="@{/logout}">Logout</a>
         </li>
     </ul>
