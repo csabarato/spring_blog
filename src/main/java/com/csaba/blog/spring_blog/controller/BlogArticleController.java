@@ -4,6 +4,7 @@ import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.Category;
 import com.csaba.blog.spring_blog.service.BlogArticleService;
 import com.csaba.blog.spring_blog.service.CategoryService;
+import com.csaba.blog.spring_blog.util.BlogException;
 import com.csaba.blog.spring_blog.util.CategoryPropEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,7 +48,7 @@ public class BlogArticleController {
     }
 
     @PostMapping("/new")
-    public String saveArticle(@Valid BlogArticle blogArticle, BindingResult bindingResult, Model model) {
+    public String saveArticle(@Valid BlogArticle blogArticle, BindingResult bindingResult, Model model) throws BlogException {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.findAll());
@@ -60,14 +61,14 @@ public class BlogArticleController {
     }
 
     @GetMapping("/edit/{id}")
-    public String getEditArticleForm(@PathVariable long id, Model model) {
+    public String getEditArticleForm(@PathVariable long id, Model model) throws BlogException {
         model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("blogArticle",  blogArticleService.findById(id));
         return "articles/create_article";
     }
 
     @PostMapping("/edit/{id}")
-    public String editArticleForm(@PathVariable Long id,@Valid BlogArticle blogArticle, BindingResult bindingResult, Model model) {
+    public String editArticleForm(@PathVariable Long id,@Valid BlogArticle blogArticle, BindingResult bindingResult, Model model) throws BlogException {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.findAll());

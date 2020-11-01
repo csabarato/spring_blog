@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service("userDetailsService")
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public BlogUser save(BlogUser user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name())));
+        user.setRoles(new HashSet<>(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name()))));
 
         return userRepostitory.save(user);
     }

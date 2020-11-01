@@ -100,7 +100,7 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
         user1.setPassword(passwordEncoder.encode(password));
 
         Role roleAdmin = roleRepository.findByName(Roles.ROLE_ADMIN.name());
-        user1.setRoles(Collections.singletonList(roleAdmin));
+        user1.setRoles(new HashSet<>(Collections.singletonList(roleAdmin)));
 
         user1 = userRepostitory.save(user1);
 
@@ -109,7 +109,7 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
         user2.setUsername("user");
         user2.setEmail("user@user.com");
         user2.setPassword(passwordEncoder.encode("asd"));
-        user2.setRoles(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name())));
+        user2.setRoles(new HashSet<>(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name()))));
 
         user2 = userRepostitory.save(user2);
 

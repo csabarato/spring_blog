@@ -1,5 +1,6 @@
 package com.csaba.blog.spring_blog.model;
 
+import com.csaba.blog.spring_blog.constants.Roles;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(exclude = {"articles"}, callSuper = false)
 @NoArgsConstructor
 public class BlogUser extends AuditableEntity<String> implements UserDetails {
 
@@ -45,7 +46,7 @@ public class BlogUser extends AuditableEntity<String> implements UserDetails {
     @JoinTable(
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     @OneToMany(mappedBy = "author")
     private Set<BlogArticle> articles;
@@ -55,6 +56,14 @@ public class BlogUser extends AuditableEntity<String> implements UserDetails {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
+    }
+
+    public boolean isAdmin() {
+        return roles.stream().anyMatch( role -> role.getName().equals(Roles.ROLE_ADMIN.name()));
+    }
+
+    public boolean ownsArticle(BlogArticle blogArticle) {
+        return blogArticle.getAuthor().equals(this);
     }
 
     @Override

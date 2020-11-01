@@ -1,0 +1,16 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/header :: header (title='Error')"></div>
+<div th:replace="fragments/menu"></div>
+
+<body>
+<div class="container">
+    <div class="alert alert-danger">
+        <div th:text="'Error: ' + ${error_msg}">error</div>
+        <div th:text="${code} + ' : '+ ${code_message} " >error</div>
+    </div>
+
+</div>
+
+</body>
+</html>

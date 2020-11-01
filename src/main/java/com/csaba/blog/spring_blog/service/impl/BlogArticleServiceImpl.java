@@ -1,5 +1,6 @@
 package com.csaba.blog.spring_blog.service.impl;
 
+import com.csaba.blog.spring_blog.util.BlogException;
 import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.repository.BlogArticleRepository;
@@ -29,10 +30,21 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     }
 
     @Override
-    public BlogArticle save(BlogArticle blogArticle, boolean isUpdate) {
+    public BlogArticle save(BlogArticle blogArticle, boolean isUpdate) throws BlogException {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        BlogUser currentUser = (BlogUser) auth.getPrincipal();
 
         if (isUpdate) {
             BlogArticle blogArticleToUpdate = blogArticleRepository.findById(blogArticle.getId()).orElse(null);
+
+            if (blogArticleToUpdate == null) {
+                throw new BlogException(1);
+            }
+
+            if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticleToUpdate) ) {
+                throw new BlogException(2);
+            }
 
             blogArticleToUpdate.setTitle(blogArticle.getTitle());
             blogArticleToUpdate.setText(blogArticle.getText());
@@ -40,14 +52,27 @@ public class BlogArticleServiceImpl implements BlogArticleService {
             return blogArticleRepository.save(blogArticleToUpdate);
         }
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        blogArticle.setAuthor((BlogUser) auth.getPrincipal());
+        blogArticle.setAuthor(currentUser);
 
         return blogArticleRepository.save(blogArticle);
     }
 
     @Override
-    public BlogArticle findById(Long id) {
-        return blogArticleRepository.findById(id).orElse(null);
+    public BlogArticle findById(Long id) throws BlogException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        BlogUser currentUser = (BlogUser) auth.getPrincipal();
+
+        BlogArticle blogArticle = blogArticleRepository.findById(id).orElse(null);
+
+
+        if (blogArticle == null) {
+            throw new BlogException(1);
+        }
+
+        if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticle)) {
+            throw new BlogException(2);
+        }
+
+        return blogArticle;
     }
 }
