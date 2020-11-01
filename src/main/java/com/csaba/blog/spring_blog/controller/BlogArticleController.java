@@ -54,7 +54,7 @@ public class BlogArticleController {
             return "articles/create_article";
         }
 
-        blogArticleService.save(blogArticle);
+        blogArticleService.save(blogArticle, false);
 
         return "redirect:list";
     }
@@ -74,7 +74,7 @@ public class BlogArticleController {
             return "articles/create_article";
         }
 
-        blogArticleService.save(blogArticle);
+        blogArticleService.save(blogArticle, true);
         return "redirect:/articles/list";
     }
 

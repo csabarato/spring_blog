@@ -8,7 +8,7 @@ public interface BlogArticleService {
 
     List<BlogArticle> findAll();
 
-    BlogArticle save(BlogArticle blogArticle);
+    BlogArticle save(BlogArticle blogArticle, boolean isUpdate);
 
     BlogArticle findById(Long id);
 }

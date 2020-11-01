@@ -19,6 +19,7 @@ public class SpringBlogApplication {
     }
 
     @Bean
+    @Profile("dev")
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
     }

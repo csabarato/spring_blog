@@ -7,17 +7,23 @@
 
 <div th:replace="fragments/menu"></div>
 
-<div th:each="article: ${articles}" class="card" style="width: 18rem;">
+<div th:each="article: ${articles}" class="card" style="width: 24rem; padding: 20px">
     <div class="card-body">
         <h5 class="card-title" th:text=" ${article.title}">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted" th:text="${#dates.format(article.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
         <p class="card-text" th:text="${article.text}">Text</p>
         <h6>Categories</h6>
         <ul th:each="category: ${article.categories}">
             <li th:text="${category.name}">cat</li>
         </ul>
         <a href="#" class="card-link">Open</a>
-        <a href="#" class="card-link" th:href="@{'/articles/edit/' + ${article.id}}" >Edit</a>
+
+        <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')') or  (#authentication.getName() == article.author.username) }"
+           href="#" class="card-link" th:href="@{'/articles/edit/' + ${article.id}}" >Edit</a>
+
+        <div class="alert alert-dark">
+            <h6 class="card-subtitle mb-2 text-muted" th:text="'Created at: ' + ${#dates.format(article.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
+            <h6 class="card-subtitle mb-2 text-muted" th:text="'Created by: ' + ${article.author.username}">Created at</h6>
+        </div>
     </div>
 </div>
 

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -16,5 +17,6 @@ import javax.persistence.Id;
 public class Category extends AuditableEntity<String> {
 
     @Id
+    @Column(unique = true)
     private String name;
 }

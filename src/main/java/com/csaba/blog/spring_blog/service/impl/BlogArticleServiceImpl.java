@@ -29,7 +29,16 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     }
 
     @Override
-    public BlogArticle save(BlogArticle blogArticle) {
+    public BlogArticle save(BlogArticle blogArticle, boolean isUpdate) {
+
+        if (isUpdate) {
+            BlogArticle blogArticleToUpdate = blogArticleRepository.findById(blogArticle.getId()).orElse(null);
+
+            blogArticleToUpdate.setTitle(blogArticle.getTitle());
+            blogArticleToUpdate.setText(blogArticle.getText());
+            blogArticleToUpdate.setCategories(blogArticle.getCategories());
+            return blogArticleRepository.save(blogArticleToUpdate);
+        }
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         blogArticle.setAuthor((BlogUser) auth.getPrincipal());
