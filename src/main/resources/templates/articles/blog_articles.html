@@ -17,7 +17,7 @@
             <li th:text="${category.name}">cat</li>
         </ul>
         <a href="#" class="card-link">Open</a>
-        <a href="#" class="card-link">Edit</a>
+        <a href="#" class="card-link" th:href="@{'/articles/edit/' + ${article.id}}" >Edit</a>
     </div>
 </div>
 

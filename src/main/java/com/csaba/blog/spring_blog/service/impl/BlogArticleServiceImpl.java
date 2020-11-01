@@ -36,4 +36,9 @@ public class BlogArticleServiceImpl implements BlogArticleService {
 
         return blogArticleRepository.save(blogArticle);
     }
+
+    @Override
+    public BlogArticle findById(Long id) {
+        return blogArticleRepository.findById(id).orElse(null);
+    }
 }

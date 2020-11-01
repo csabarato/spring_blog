@@ -17,7 +17,7 @@
 
 <div class="container ">
     <!--/*@thymesVar id="blogArticle" type="com.csaba.blog.spring_blog.model.BlogArticle"*/-->
-    <form action="#" th:action="@{/articles/new}" th:object="${blogArticle}" method="post">
+    <form action="#" th:action="${blogArticle.id} == null ? @{/articles/new} : @{'/articles/edit/' + ${blogArticle.id}} " th:object="${blogArticle}" method="post">
         <div class="form-group">
             <label for="title">Title</label>
             <input type="text" class="form-control" id="title" placeholder="Enter title" th:field="*{title}">
@@ -39,7 +39,7 @@
         <div class="form-group">
             <div class="checkbox" th:each="cat : ${categories}">
 
-                <input type="checkbox" th:value="${cat}" th:field="*{categories}"/>
+                <input type="checkbox" th:value="${cat.name}" th:field="*{categories}"/>
                 <label style="margin-left: 20px" th:text="${cat.name}">asd</label>
             </div>
 

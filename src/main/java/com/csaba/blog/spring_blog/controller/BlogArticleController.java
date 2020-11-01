@@ -10,10 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 @Controller
@@ -49,7 +47,7 @@ public class BlogArticleController {
     }
 
     @PostMapping("/new")
-    public String getCreateArticleForm(@Valid BlogArticle blogArticle, BindingResult bindingResult, Model model) {
+    public String saveArticle(@Valid BlogArticle blogArticle, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.findAll());
@@ -59,6 +57,25 @@ public class BlogArticleController {
         blogArticleService.save(blogArticle);
 
         return "redirect:list";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String getEditArticleForm(@PathVariable long id, Model model) {
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("blogArticle",  blogArticleService.findById(id));
+        return "articles/create_article";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editArticleForm(@PathVariable Long id,@Valid BlogArticle blogArticle, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryService.findAll());
+            return "articles/create_article";
+        }
+
+        blogArticleService.save(blogArticle);
+        return "redirect:/articles/list";
     }
 
     @InitBinder

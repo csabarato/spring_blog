@@ -9,4 +9,6 @@ public interface BlogArticleService {
     List<BlogArticle> findAll();
 
     BlogArticle save(BlogArticle blogArticle);
+
+    BlogArticle findById(Long id);
 }
