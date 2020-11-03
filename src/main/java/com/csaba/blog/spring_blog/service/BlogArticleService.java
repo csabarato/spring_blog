@@ -12,4 +12,6 @@ public interface BlogArticleService {
     BlogArticle save(BlogArticle blogArticle, boolean isUpdate) throws BlogException;
 
     BlogArticle findById(Long id) throws BlogException;
+
+    BlogArticle deleteById(Long id) throws BlogException;
 }

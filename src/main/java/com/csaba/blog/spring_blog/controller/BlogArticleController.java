@@ -79,6 +79,14 @@ public class BlogArticleController {
         return "redirect:/articles/list";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteArticle(@PathVariable Long id) throws BlogException {
+
+        blogArticleService.deleteById(id);
+
+        return "redirect:/articles/list";
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Category.class, new CategoryPropEditor());

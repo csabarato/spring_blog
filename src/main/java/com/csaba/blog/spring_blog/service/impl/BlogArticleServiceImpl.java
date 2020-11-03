@@ -1,5 +1,6 @@
 package com.csaba.blog.spring_blog.service.impl;
 
+import com.csaba.blog.spring_blog.constants.BlogErrorType;
 import com.csaba.blog.spring_blog.util.BlogException;
 import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.BlogUser;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -36,20 +38,20 @@ public class BlogArticleServiceImpl implements BlogArticleService {
         BlogUser currentUser = (BlogUser) auth.getPrincipal();
 
         if (isUpdate) {
-            BlogArticle blogArticleToUpdate = blogArticleRepository.findById(blogArticle.getId()).orElse(null);
+            Optional<BlogArticle> blogArticleToUpdateOpt = blogArticleRepository.findById(blogArticle.getId());
 
-            if (blogArticleToUpdate == null) {
-                throw new BlogException(1);
+            if (blogArticleToUpdateOpt.isEmpty()) {
+                throw new BlogException(BlogErrorType.EC_ARTICLE_NOT_FOUND);
             }
 
-            if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticleToUpdate) ) {
-                throw new BlogException(2);
+            if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticleToUpdateOpt.get()) ) {
+                throw new BlogException(BlogErrorType.EC_ARTICLE_EDITING_UNAUTHORIZED);
             }
 
-            blogArticleToUpdate.setTitle(blogArticle.getTitle());
-            blogArticleToUpdate.setText(blogArticle.getText());
-            blogArticleToUpdate.setCategories(blogArticle.getCategories());
-            return blogArticleRepository.save(blogArticleToUpdate);
+            blogArticleToUpdateOpt.get().setTitle(blogArticle.getTitle());
+            blogArticleToUpdateOpt.get().setText(blogArticle.getText());
+            blogArticleToUpdateOpt.get().setCategories(blogArticle.getCategories());
+            return blogArticleRepository.save(blogArticleToUpdateOpt.get());
         }
 
         blogArticle.setAuthor(currentUser);
@@ -62,17 +64,37 @@ public class BlogArticleServiceImpl implements BlogArticleService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         BlogUser currentUser = (BlogUser) auth.getPrincipal();
 
-        BlogArticle blogArticle = blogArticleRepository.findById(id).orElse(null);
+        Optional<BlogArticle> blogArticleOpt = blogArticleRepository.findById(id);
 
 
-        if (blogArticle == null) {
-            throw new BlogException(1);
+        if (blogArticleOpt.isEmpty()) {
+            throw new BlogException(BlogErrorType.EC_ARTICLE_NOT_FOUND);
         }
 
-        if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticle)) {
-            throw new BlogException(2);
+        if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticleOpt.get())) {
+            throw new BlogException(BlogErrorType.EC_ARTICLE_EDITING_UNAUTHORIZED);
         }
 
-        return blogArticle;
+        return blogArticleOpt.get();
+    }
+
+    @Override
+    public BlogArticle deleteById(Long id) throws BlogException {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        BlogUser currentUser = (BlogUser) auth.getPrincipal();
+
+        Optional<BlogArticle> blogArticleOpt = blogArticleRepository.findById(id);
+
+        if (blogArticleOpt.isEmpty()) {
+            throw new BlogException(BlogErrorType.EC_ARTICLE_NOT_FOUND);
+        }
+
+        if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticleOpt.get())) {
+            throw new BlogException(BlogErrorType.EC_ARTICLE_EDITING_UNAUTHORIZED);
+        }
+
+        blogArticleRepository.deleteById(id);
+        return blogArticleOpt.get();
     }
 }

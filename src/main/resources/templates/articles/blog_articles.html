@@ -20,6 +20,9 @@
         <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')') or  (#authentication.getName() == article.author.username) }"
            href="#" class="card-link" th:href="@{'/articles/edit/' + ${article.id}}" >Edit</a>
 
+        <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')') or  (#authentication.getName() == article.author.username) }"
+           href="#" class="card-link text-danger" th:href="@{'/articles/delete/' + ${article.id}}" >Delete</a>
+
         <div class="alert alert-dark">
             <h6 class="card-subtitle mb-2 text-muted" th:text="'Created at: ' + ${#dates.format(article.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
             <h6 class="card-subtitle mb-2 text-muted" th:text="'Created by: ' + ${article.author.username}">Created by</h6>

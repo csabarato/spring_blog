@@ -1,14 +1,16 @@
 package com.csaba.blog.spring_blog.util;
 
+import com.csaba.blog.spring_blog.constants.BlogErrorType;
+
 public class BlogException extends Exception {
 
-    private Integer errorCode;
+    private BlogErrorType errorType;
 
-    public BlogException(Integer errorCode) {
-        this.errorCode = errorCode;
+    public BlogException(BlogErrorType errorType) {
+        this.errorType = errorType;
     }
 
-    public Integer getErrorCode() {
-        return errorCode;
+    public BlogErrorType getErrorType() {
+        return errorType;
     }
 }
