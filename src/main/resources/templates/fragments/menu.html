@@ -1,27 +1,38 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark"
      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
      th:fragment="menu">
 
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="navbar-brand" href="#">
+                    <img class="logo" style="width: 3rem; height: 3rem" th:src="@{/images/blog.svg}">
+                </a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="nav-item nav-link" th:href="@{/user/list}">Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-item nav-link" th:href="@{/articles/list}">Blog articles</a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="hasAnyAuthority('ROLE_ADMIN,ROLE_USER')" class="nav-item nav-link" th:href="@{/articles/new}">Write article</a>
+            </li>
+            <li class="nav-item">
+                <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:href="@{/logout}">Logout</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <form action="#" th:action="@{/articles/search}" method="get">
+                <input type="search" th:name="title" placeholder="Search...">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
 
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="navbar-brand" href="#">
-                <img class="logo" style="width: 3rem; height: 3rem" th:src="@{/images/blog.svg}">
-            </a>
-        </li>
-        <li class="nav-item">
-            <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="nav-item nav-link" th:href="@{/user/list}">Users</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-item nav-link" th:href="@{/articles/list}">Blog articles</a>
-        </li>
-        <li class="nav-item">
-            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN,ROLE_USER')" class="nav-item nav-link" th:href="@{/articles/new}">Write article</a>
-        </li>
-        <li class="nav-item">
-            <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:href="@{/logout}">Logout</a>
-        </li>
-    </ul>
+        </ul>
+    </div>
 </nav>
 
 

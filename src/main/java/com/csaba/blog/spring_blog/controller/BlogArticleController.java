@@ -87,6 +87,22 @@ public class BlogArticleController {
         return "redirect:/articles/list";
     }
 
+    @GetMapping("/search")
+    public String search(
+            Model model,
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "author", required = false) String author,
+            @RequestParam(name = "text", required = false) String text,
+            @RequestParam(name = "dateFrom", required = false) String dateFrom,
+            @RequestParam(name = "dateTo", required = false) String dateTo) {
+
+
+
+        model.addAttribute("articles", blogArticleService.searchByParams(title, author, text, dateFrom, dateTo));
+
+        return "articles/blog_articles";
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Category.class, new CategoryPropEditor());
