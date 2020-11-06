@@ -87,6 +87,11 @@ public class BlogArticleController {
         return "redirect:/articles/list";
     }
 
+    @GetMapping("/search/form")
+    public String getSearchForm() {
+        return "articles/search_form";
+    }
+
     @GetMapping("/search")
     public String search(
             Model model,

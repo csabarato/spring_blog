@@ -33,4 +33,14 @@ public class BlogExceptionController {
         return model;
     }
 
+    @ExceptionHandler(value = Exception.class)
+    public ModelAndView handleAnyException(Exception e) {
+
+        ModelAndView model = new ModelAndView("error");
+        model.setViewName("error");
+
+        model.addObject("error_msg", e.getMessage());
+        return model;
+    }
+
 }

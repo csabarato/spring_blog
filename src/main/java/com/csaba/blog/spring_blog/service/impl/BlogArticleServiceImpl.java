@@ -6,6 +6,7 @@ import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.repository.BlogArticleRepository;
 import com.csaba.blog.spring_blog.service.BlogArticleService;
+import com.csaba.blog.spring_blog.util.DateConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -13,8 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Service
 @Transactional
@@ -102,6 +105,13 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     @Override
     public List<BlogArticle> searchByParams(String title, String author, String text, String dateFrom, String dateTo) {
 
-        return blogArticleRepository.searchByParams(Optional.ofNullable(title), Optional.ofNullable(author));
+        Optional<String> titleOpt = Optional.of(title).filter(Predicate.not(String::isEmpty));
+        Optional<String> authorOpt = Optional.of(author).filter(Predicate.not(String::isEmpty));
+        Optional<String> textOpt = Optional.of(text).filter(Predicate.not(String::isEmpty));
+
+        Optional<Date> dateFromOpt = Optional.ofNullable(DateConverter.convertStringToDate(dateFrom));
+        Optional<Date> dateToOpt = Optional.ofNullable(DateConverter.convertStringToDate(dateTo));
+
+        return blogArticleRepository.searchByParams(titleOpt, authorOpt, textOpt, dateFromOpt, dateToOpt);
     }
 }

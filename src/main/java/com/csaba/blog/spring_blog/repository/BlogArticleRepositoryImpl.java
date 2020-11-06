@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,8 @@ public class BlogArticleRepositoryImpl implements BlogArticleRepositoryCustom {
     EntityManager entityManager;
 
     @Override
-    public List<BlogArticle> searchByParams(Optional<String> titleParam, Optional<String> authorParam) {
+    public List<BlogArticle> searchByParams(Optional<String> titleOpt, Optional<String> authorOpt, Optional<String> textOpt,
+                                            Optional<Date> dateFromOpt, Optional<Date> dateToOpt) {
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<BlogArticle> cq = cb.createQuery(BlogArticle.class);
@@ -29,8 +31,13 @@ public class BlogArticleRepositoryImpl implements BlogArticleRepositoryCustom {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        titleParam.ifPresent(title -> predicates.add(cb.equal(blogArticleRoot.get("title"), title)));
-        authorParam.ifPresent(author -> predicates.add(cb.equal(blogArticleRoot.get("author"), author)));
+        titleOpt.ifPresent(title -> predicates.add(cb.equal(blogArticleRoot.get("title"), title)));
+        authorOpt.ifPresent(author -> predicates.add(cb.equal(blogArticleRoot.get("author").get("username"), author)));
+
+        textOpt.ifPresent(text -> predicates.add(cb.like(blogArticleRoot.get("text") , '%'+text+'%' )) );
+
+        dateFromOpt.ifPresent(date -> predicates.add(cb.greaterThanOrEqualTo(blogArticleRoot.<Date>get("createdAt"), date)));
+        dateToOpt.ifPresent(date -> predicates.add(cb.lessThanOrEqualTo(blogArticleRoot.<Date>get("createdAt"), date)));
 
         cq.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
         cq.orderBy(cb.desc(blogArticleRoot.get("createdAt")));
