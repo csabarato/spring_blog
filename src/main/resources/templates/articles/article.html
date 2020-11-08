@@ -39,6 +39,15 @@
                 <h6 class="card-subtitle mb-2 text-muted" th:text="'Created by: ' + ${article.author.username}">Created by</h6>
             </div>
         </div>
+
+        <div sec:authorize="isAuthenticated()">
+            <a href="#" th:href="'/articles/'+ ${article.id}+ '/like'" class="text-primary">
+                <i th:classappend="${article.likedBy.contains(#authentication.getPrincipal())} ? 'fa fa-thumbs-up fa-lg' : 'fa fa-thumbs-o-up fa-lg'"
+                   style="margin-left: 20px" aria-hidden="true"></i>
+
+                Like</a>
+                <span class="text-primary" th:text="${article.likedBy.size()}"></span>
+        </div>
     </div>
 
     <div style="margin-top : 30px; margin-bottom: 30px">
@@ -57,9 +66,18 @@
             <h6 class="card-subtitle mb-2 text-muted" th:text="${#dates.format(comment.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
         </div>
 
+        <div sec:authorize="isAuthenticated()">
+            <a href="#" th:href="'/comment/'+ ${article.id+'/'+comment.id} + '/like'" class="text-primary">
+                <i th:classappend="${comment.likedBy.contains(#authentication.getPrincipal())} ? 'fa fa-thumbs-up fa-lg' : 'fa fa-thumbs-o-up fa-lg'"
+                   style="margin-left: 20px" aria-hidden="true"></i>
+
+                Like</a>
+            <span class="text-primary" th:text="${comment.likedBy.size()}"></span>
+        </div>
+
     </div>
 
-    <p sec:authorize="hasAnyAuthority('ROLE_ADMIN,ROLE_USER')">
+    <p sec:authorize="isAuthenticated()">
         <a class="btn btn-secondary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"
             style="margin: 10px">
             Write comment

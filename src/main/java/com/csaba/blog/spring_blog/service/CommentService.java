@@ -6,4 +6,6 @@ import com.csaba.blog.spring_blog.util.BlogException;
 public interface CommentService {
 
     Comment save(Comment comment, Long articleId) throws BlogException;
+
+    void addOrRemoveCommentLike(Long id) throws BlogException;
 }

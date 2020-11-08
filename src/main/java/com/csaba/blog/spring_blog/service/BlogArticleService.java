@@ -16,4 +16,6 @@ public interface BlogArticleService {
     BlogArticle deleteById(Long id) throws BlogException;
 
     List<BlogArticle> searchByParams(String title, String author, String text, String dateFrom, String dateTo);
+
+    void addOrRemoveArticleLike(Long id) throws BlogException;
 }

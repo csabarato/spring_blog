@@ -6,19 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class Comment extends AuditableEntity<String> {
-
-    public Comment(@NotNull BlogArticle blogArticle, @NotNull BlogUser blogUser, @NotEmpty(message = "Comment text should not be empty") String text) {
-        this.blogArticle = blogArticle;
-        this.blogUser = blogUser;
-        this.text = text;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +29,10 @@ public class Comment extends AuditableEntity<String> {
 
     @NotEmpty(message = "Comment text should not be empty")
     private String text;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "comment_user_likes",
+            joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "blog_user_id", referencedColumnName = "id"))
+    Set<BlogUser> likedBy;
 }

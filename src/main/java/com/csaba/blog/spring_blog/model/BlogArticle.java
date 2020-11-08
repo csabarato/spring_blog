@@ -38,4 +38,10 @@ public class BlogArticle extends AuditableEntity<String> {
 
     @OneToMany(mappedBy = "blogArticle")
     private List<Comment> comments;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "article_user_likes",
+                joinColumns = @JoinColumn(name = "blog_article_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "blog_user_id", referencedColumnName = "id"))
+    private Set<BlogUser> likedBy;
 }

@@ -118,6 +118,13 @@ public class BlogArticleController {
         return "articles/article";
     }
 
+    @GetMapping("/{id}/like")
+    public String setArticleLike(@PathVariable Long id) throws BlogException {
+
+        blogArticleService.addOrRemoveArticleLike(id);
+        return "redirect:/articles/get/"+ id;
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Category.class, new CategoryPropEditor());

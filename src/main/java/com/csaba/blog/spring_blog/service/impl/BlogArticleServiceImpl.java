@@ -104,4 +104,19 @@ public class BlogArticleServiceImpl implements BlogArticleService {
 
         return blogArticleRepository.searchByParams(titleOpt, authorOpt, textOpt, dateFromOpt, dateToOpt);
     }
+
+    @Override
+    public void addOrRemoveArticleLike(Long id) throws BlogException {
+
+        BlogUser currentUser = AuthUtils.getCurrentUser();
+        BlogArticle blogArticle = this.findById(id);
+
+
+        if (blogArticle.getLikedBy().contains(currentUser)) {
+            blogArticle.getLikedBy().remove(currentUser);
+        } else {
+            blogArticle.getLikedBy().add(currentUser);
+        }
+        blogArticleRepository.save(blogArticle);
+    }
 }

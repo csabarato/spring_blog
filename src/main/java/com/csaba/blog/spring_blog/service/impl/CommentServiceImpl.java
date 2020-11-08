@@ -1,5 +1,7 @@
 package com.csaba.blog.spring_blog.service.impl;
 
+import com.csaba.blog.spring_blog.constants.BlogErrorType;
+import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.model.Comment;
 import com.csaba.blog.spring_blog.repository.CommentRepository;
 import com.csaba.blog.spring_blog.service.BlogArticleService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,5 +35,25 @@ public class CommentServiceImpl implements CommentService {
         comment.setBlogUser(AuthUtils.getCurrentUser());
 
         return commentRepository.save(comment);
+    }
+
+    @Override
+    public void addOrRemoveCommentLike(Long id) throws BlogException{
+
+        BlogUser currentUser = AuthUtils.getCurrentUser();
+        Optional<Comment> commentOpt = commentRepository.findById(id);
+
+        if (commentOpt.isEmpty()) {
+            throw new BlogException(BlogErrorType.EC_COMMENT_NOT_FOUND);
+        }
+
+        Comment comment = commentOpt.get();
+
+        if (comment.getLikedBy().contains(currentUser)) {
+            comment.getLikedBy().remove(currentUser);
+        } else {
+            comment.getLikedBy().add(currentUser);
+        }
+        commentRepository.save(comment);
     }
 }
