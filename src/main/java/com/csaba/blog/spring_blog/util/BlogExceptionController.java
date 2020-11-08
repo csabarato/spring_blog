@@ -15,8 +15,8 @@ public class BlogExceptionController {
     @ExceptionHandler(value = BlogException.class)
     public ModelAndView handleBlogException(BlogException blogEx) {
 
-        ModelAndView model = new ModelAndView("error");
-        model.setViewName("error");
+        ModelAndView model = new ModelAndView("errorpage");
+        model.setViewName("errorpage");
 
         if (BlogErrorType.EC_ARTICLE_NOT_FOUND.equals(blogEx.getErrorType())) {
             model.addObject("error_msg", "Blog article not found with provided ID");
@@ -36,8 +36,8 @@ public class BlogExceptionController {
     @ExceptionHandler(value = Exception.class)
     public ModelAndView handleAnyException(Exception e) {
 
-        ModelAndView model = new ModelAndView("error");
-        model.setViewName("error");
+        ModelAndView model = new ModelAndView("errorpage");
+        model.setViewName("errorpage");
 
         model.addObject("error_msg", e.getMessage());
         return model;

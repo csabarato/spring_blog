@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,4 +35,7 @@ public class BlogArticle extends AuditableEntity<String> {
 
     @ManyToOne
     private BlogUser author;
+
+    @OneToMany(mappedBy = "blogArticle")
+    private List<Comment> comments;
 }

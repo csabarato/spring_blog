@@ -27,6 +27,9 @@
             <li class="nav-item">
                 <a sec:authorize="isAuthenticated()" class="nav-item nav-link" th:href="@{/logout}">Logout</a>
             </li>
+            <li class="nav-item">
+                <a sec:authorize="!isAuthenticated()" class="nav-item nav-link" th:href="@{/login}">Login</a>
+            </li>
         </ul>
         <ul class="navbar-nav ml-auto" th:if="${#httpServletRequest.requestURI == '/articles/list'}">
             <form action="#" th:action="@{/articles/search}" method="get">

@@ -2,6 +2,7 @@ package com.csaba.blog.spring_blog.controller;
 
 import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.Category;
+import com.csaba.blog.spring_blog.model.Comment;
 import com.csaba.blog.spring_blog.service.BlogArticleService;
 import com.csaba.blog.spring_blog.service.CategoryService;
 import com.csaba.blog.spring_blog.util.BlogException;
@@ -106,6 +107,15 @@ public class BlogArticleController {
         model.addAttribute("articles", blogArticleService.searchByParams(title, author, text, dateFrom, dateTo));
 
         return "articles/blog_articles";
+    }
+
+    @GetMapping("/get/{id}")
+    public String getArticlePage(@PathVariable Long id, Model model, Comment comment) throws BlogException {
+
+        BlogArticle blogArticle = blogArticleService.findById(id);
+        model.addAttribute("article", blogArticle);
+
+        return "articles/article";
     }
 
     @InitBinder

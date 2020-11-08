@@ -1,6 +1,7 @@
 package com.csaba.blog.spring_blog.service.impl;
 
 import com.csaba.blog.spring_blog.constants.BlogErrorType;
+import com.csaba.blog.spring_blog.util.AuthUtils;
 import com.csaba.blog.spring_blog.util.BlogException;
 import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.BlogUser;
@@ -9,8 +10,6 @@ import com.csaba.blog.spring_blog.service.BlogArticleService;
 import com.csaba.blog.spring_blog.util.DateConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +37,7 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     @Override
     public BlogArticle save(BlogArticle blogArticle, boolean isUpdate) throws BlogException {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        BlogUser currentUser = (BlogUser) auth.getPrincipal();
+        BlogUser currentUser = AuthUtils.getCurrentUser();
 
         if (isUpdate) {
             Optional<BlogArticle> blogArticleToUpdateOpt = blogArticleRepository.findById(blogArticle.getId());
@@ -65,18 +63,11 @@ public class BlogArticleServiceImpl implements BlogArticleService {
 
     @Override
     public BlogArticle findById(Long id) throws BlogException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        BlogUser currentUser = (BlogUser) auth.getPrincipal();
 
         Optional<BlogArticle> blogArticleOpt = blogArticleRepository.findById(id);
 
-
         if (blogArticleOpt.isEmpty()) {
             throw new BlogException(BlogErrorType.EC_ARTICLE_NOT_FOUND);
-        }
-
-        if (!currentUser.isAdmin() && !currentUser.ownsArticle(blogArticleOpt.get())) {
-            throw new BlogException(BlogErrorType.EC_ARTICLE_EDITING_UNAUTHORIZED);
         }
 
         return blogArticleOpt.get();
@@ -85,8 +76,7 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     @Override
     public BlogArticle deleteById(Long id) throws BlogException {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        BlogUser currentUser = (BlogUser) auth.getPrincipal();
+        BlogUser currentUser = AuthUtils.getCurrentUser();
 
         Optional<BlogArticle> blogArticleOpt = blogArticleRepository.findById(id);
 
@@ -105,9 +95,9 @@ public class BlogArticleServiceImpl implements BlogArticleService {
     @Override
     public List<BlogArticle> searchByParams(String title, String author, String text, String dateFrom, String dateTo) {
 
-        Optional<String> titleOpt = Optional.of(title).filter(Predicate.not(String::isEmpty));
-        Optional<String> authorOpt = Optional.of(author).filter(Predicate.not(String::isEmpty));
-        Optional<String> textOpt = Optional.of(text).filter(Predicate.not(String::isEmpty));
+        Optional<String> titleOpt = Optional.ofNullable(title).filter(Predicate.not(String::isEmpty));
+        Optional<String> authorOpt = Optional.ofNullable(author).filter(Predicate.not(String::isEmpty));
+        Optional<String> textOpt = Optional.ofNullable(text).filter(Predicate.not(String::isEmpty));
 
         Optional<Date> dateFromOpt = Optional.ofNullable(DateConverter.convertStringToDate(dateFrom));
         Optional<Date> dateToOpt = Optional.ofNullable(DateConverter.convertStringToDate(dateTo));

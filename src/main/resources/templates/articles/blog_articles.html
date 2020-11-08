@@ -15,8 +15,7 @@
         <ul th:each="category: ${article.categories}">
             <li th:text="${category.name}">cat</li>
         </ul>
-        <a href="#" class="card-link">Open</a>
-
+        <a href="#" class="card-link" th:href="@{'/articles/get/' + ${article.id}}">Open</a>
         <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')') or  (#authentication.getName() == article.author.username) }"
            href="#" class="card-link" th:href="@{'/articles/edit/' + ${article.id}}" >Edit</a>
 

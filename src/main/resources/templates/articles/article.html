@@ -1,0 +1,89 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:replace="fragments/header :: header (title='Blog articles')"></div>
+<link rel="stylesheet" th:href="@{/css/articleList.css}"/>
+
+<style>
+
+    h2 {
+        margin-top: 20px;
+    }
+    .comment-box {
+        width: 80%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+</style>
+
+<body>
+
+<div th:replace="fragments/menu"></div>
+
+<div class="container">
+
+    <h2 class="text-primary" th:text="${article.title}">title</h2>
+
+    <div class="card" style="width: 100%; padding: 20px">
+        <div class="card-body">
+
+            <h4 class="text-info" th:text="${article.text}">Text</h4>
+            <h6>Categories</h6>
+            <ul th:each="category: ${article.categories}">
+                <li th:text="${category.name}">cat</li>
+            </ul>
+
+            <div class="alert alert-dark">
+                <h6 class="card-subtitle mb-2 text-muted" th:text="'Created at: ' + ${#dates.format(article.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
+                <h6 class="card-subtitle mb-2 text-muted" th:text="'Created by: ' + ${article.author.username}">Created by</h6>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top : 30px; margin-bottom: 30px">
+        <h5 th:text="${#lists.isEmpty(article.comments) ? 'No comments yet' : 'Comments'}" class="text-secondary">Comments</h5>
+    </div>
+
+    <div th:if="${not #lists.isEmpty(article.comments)}" class="card comment-box" th:each="comment : ${article.comments}">
+        <div class="card-body">
+
+            <h4 th:text="${comment.blogUser.username}">written by</h4>
+            <div>
+                <p th:text="${comment.text}">
+                   comment text
+                </p>
+            </div>
+            <h6 class="card-subtitle mb-2 text-muted" th:text="${#dates.format(comment.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
+        </div>
+
+    </div>
+
+    <p sec:authorize="hasAnyAuthority('ROLE_ADMIN,ROLE_USER')">
+        <a class="btn btn-secondary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"
+            style="margin: 10px">
+            Write comment
+        </a>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <div class="card" style="width: 50%; padding: 20px">
+            <div>
+                <!--/*@thymesVar id="comment" type="com.csaba.blog.spring_blog.model.Comment"*/-->
+                <form action="#" th:action="'/comment/' +  ${article.id}" th:object="${comment}" method="post">
+                    <div class="form-group">
+                        <textarea class="form-control" rows="3" placeholder="Enter your comment" th:field="*{text}"></textarea>
+                        <div>
+                            <span class="text-danger" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add comment</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

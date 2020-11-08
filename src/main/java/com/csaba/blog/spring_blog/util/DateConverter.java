@@ -12,7 +12,7 @@ public class DateConverter {
 
         try {
             return sdf.parse(dateString);
-        } catch (ParseException e) {
+        } catch (ParseException | NullPointerException e ) {
             return null;
         }
     }
