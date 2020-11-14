@@ -24,7 +24,8 @@
 
         <div class="alert alert-dark">
             <h6 class="card-subtitle mb-2 text-muted" th:text="'Created at: ' + ${#dates.format(article.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
-            <h6 class="card-subtitle mb-2 text-muted" th:text="'Created by: ' + ${article.author.username}">Created by</h6>
+
+            <span class="card-subtitle mb-2 text-muted">Created by: <a href="#" th:href="@{'/user/profile/' + ${article.author.username} }"  th:text="${article.author.username}"></a> </span>
         </div>
     </div>
 </div>

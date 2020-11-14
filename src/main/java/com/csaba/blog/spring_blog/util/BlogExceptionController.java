@@ -30,6 +30,12 @@ public class BlogExceptionController {
             model.addObject("code_message",HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }
 
+        if (BlogErrorType.EC_USER_NOT_FOUND.equals(blogEx.getErrorType())) {
+            model.addObject("error_msg", "User not found");
+            model.addObject("code",HttpStatus.NOT_FOUND.value());
+            model.addObject("code_message",HttpStatus.NOT_FOUND.getReasonPhrase());
+        }
+
         return model;
     }
 

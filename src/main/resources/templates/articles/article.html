@@ -36,7 +36,10 @@
 
             <div class="alert alert-dark">
                 <h6 class="card-subtitle mb-2 text-muted" th:text="'Created at: ' + ${#dates.format(article.createdAt, 'yyyy. MM. dd HH:mm')}">Created at</h6>
-                <h6 class="card-subtitle mb-2 text-muted" th:text="'Created by: ' + ${article.author.username}">Created by</h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Created by:
+                    <a href="#" th:href="@{'/user/profile/' + ${article.author.username} }"  th:text="${article.author.username}"></a>
+                </h6>
             </div>
         </div>
 
@@ -57,7 +60,8 @@
     <div th:if="${not #lists.isEmpty(article.comments)}" class="card comment-box" th:each="comment : ${article.comments}">
         <div class="card-body">
 
-            <h4 th:text="${comment.blogUser.username}">written by</h4>
+            <h4><a href="#" th:href="@{'/user/profile/' + ${comment.blogUser.username} }"  th:text="${comment.blogUser.username}"></a></h4>
+
             <div>
                 <p th:text="${comment.text}">
                    comment text

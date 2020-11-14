@@ -36,7 +36,7 @@ public class BlogArticle extends AuditableEntity<String> {
     @ManyToOne
     private BlogUser author;
 
-    @OneToMany(mappedBy = "blogArticle")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "blogArticle")
     private List<Comment> comments;
 
     @ManyToMany(fetch = FetchType.EAGER)

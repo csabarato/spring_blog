@@ -4,7 +4,8 @@ public enum BlogErrorType {
 
     EC_ARTICLE_NOT_FOUND (1),
     EC_ARTICLE_EDITING_UNAUTHORIZED(2),
-    EC_COMMENT_NOT_FOUND(3);
+    EC_COMMENT_NOT_FOUND(3),
+    EC_USER_NOT_FOUND(4);
 
     public int errorCode;
 

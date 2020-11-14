@@ -7,6 +7,26 @@
 
 <div th:replace="fragments/menu"></div>
 
+<div class="container">
+</div>
+<div th:each="user: ${users}" class="card" style="width: 30%; padding: 20px; margin: 40px">
+    <div class="card-body">
+
+        <h5 class="text-primary card-title">
+            Username:
+            <span th:text="${user.username}">Username</span></h5>
+
+        <h6 class="card-text"> Email:
+            <span th:text="${user.email}" >email</span>
+        </h6>
+
+
+        <h6 class="card-text" th:text="'Birth date: ' + ${#dates.format(user.birthdate, 'yyyy. MM. dd HH:mm')}">bday</h6>
+        <h6 class="card-text" th:text="'Registered at: ' + ${#dates.format(user.createdAt, 'yyyy. MM. dd HH:mm')}">bday</h6>
+
+    </div>
+
+</div>
 
 </body>
 </html>

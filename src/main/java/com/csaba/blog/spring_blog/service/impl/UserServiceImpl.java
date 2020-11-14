@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @Service("userDetailsService")
@@ -68,5 +69,9 @@ public class UserServiceImpl implements UserService {
         user.setRoles(new HashSet<>(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name()))));
 
         return userRepostitory.save(user);
+    }
+
+    public List<BlogUser> findAll() {
+        return userRepostitory.findAll();
     }
 }
