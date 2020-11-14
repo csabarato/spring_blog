@@ -5,6 +5,7 @@ import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.repository.RoleRepository;
 import com.csaba.blog.spring_blog.repository.UserRepostitory;
 import com.csaba.blog.spring_blog.service.UserService;
+import com.csaba.blog.spring_blog.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -73,5 +76,14 @@ public class UserServiceImpl implements UserService {
 
     public List<BlogUser> findAll() {
         return userRepostitory.findAll();
+    }
+
+    @Override
+    public BlogUser save(BlogUser user, MultipartFile file) throws IOException {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(new HashSet<>(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name()))));
+        user.setProfilePic(ImageUtils.resizeImage(file));
+
+        return userRepostitory.save(user);
     }
 }

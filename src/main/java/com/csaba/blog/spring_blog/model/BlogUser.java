@@ -42,6 +42,9 @@ public class BlogUser extends AuditableEntity<String> implements UserDetails {
 
     private boolean enabled;
 
+    @Lob
+    private byte[] profilePic;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

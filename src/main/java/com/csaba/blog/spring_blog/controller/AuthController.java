@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -44,7 +46,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@Valid BlogUser userToSave, BindingResult bindingResult, Model model) {
+    public String register(
+            @RequestParam("file") MultipartFile file,
+            @Valid BlogUser userToSave, BindingResult bindingResult, Model model) throws IOException {
 
         UserDetails user = userServiceImpl.findUserByUsername(userToSave.getUsername());
 
@@ -64,7 +68,11 @@ public class AuthController {
             return "auth/register";
         }
 
-        userServiceImpl.save(userToSave);
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
+            userServiceImpl.save(userToSave);
+        } else {
+            userServiceImpl.save(userToSave, file);
+        }
 
         return "auth/login";
     }

@@ -1,4 +1,3 @@
-
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <div th:replace="fragments/header :: header (title='User profile')"></div>
@@ -12,6 +11,10 @@
 <div th:each="user: ${users}" class="card" style="width: 30%; padding: 20px; margin: 40px">
     <div class="card-body">
 
+        <div th:if="${image}">
+            <img th:src="*{'data:image/png;base64,'+image}" alt="profile pic">
+        </div>
+
         <h5 class="text-primary card-title">
             Username:
             <span th:text="${user.username}">Username</span></h5>
@@ -24,6 +27,26 @@
         <h6 class="card-text" th:text="'Birth date: ' + ${#dates.format(user.birthdate, 'yyyy. MM. dd HH:mm')}">bday</h6>
         <h6 class="card-text" th:text="'Registered at: ' + ${#dates.format(user.createdAt, 'yyyy. MM. dd HH:mm')}">bday</h6>
 
+
+        <div th:if="${(#authentication.getName() == user.username )}">
+            <a class="btn btn-secondary" data-toggle="collapse" href="#profilePicCollapse" role="button" aria-expanded="false" aria-controls="profilePicCollapse"
+               style="margin: 10px">
+                Edit profile picture
+            </a>
+            <div class="text-danger" th:if="${profilePicError}" th:text="${profilePicError}">pic error</div>
+        </div>
+
+        <div class="collapse" id="profilePicCollapse">
+
+            <form
+                  method="post" enctype="multipart/form-data"
+                  class="form-group"
+                  th:action="'/user/updateProfilePic?'+ ${_csrf.parameterName}+ '='+ ${_csrf.token}">
+                <label>Select a profile picture</label>
+                <input type="file" name="file" />
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
     </div>
 
 </div>
