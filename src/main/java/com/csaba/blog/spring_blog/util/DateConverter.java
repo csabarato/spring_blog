@@ -16,4 +16,8 @@ public class DateConverter {
             return null;
         }
     }
+
+    public static String convertDateToString(Date date) {
+        return sdf.format(date);
+    }
 }

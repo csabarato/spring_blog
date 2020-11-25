@@ -31,13 +31,13 @@ public class BlogArticleRepositoryImpl implements BlogArticleRepositoryCustom {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        titleOpt.ifPresent(title -> predicates.add(cb.equal(blogArticleRoot.get("title"), title)));
+        titleOpt.ifPresent(title -> predicates.add(cb.like(blogArticleRoot.get("title"), '%'+title+'%')));
         authorOpt.ifPresent(author -> predicates.add(cb.equal(blogArticleRoot.get("author").get("username"), author)));
 
         textOpt.ifPresent(text -> predicates.add(cb.like(blogArticleRoot.get("text") , '%'+text+'%' )) );
 
-        dateFromOpt.ifPresent(date -> predicates.add(cb.greaterThanOrEqualTo(blogArticleRoot.<Date>get("createdAt"), date)));
-        dateToOpt.ifPresent(date -> predicates.add(cb.lessThanOrEqualTo(blogArticleRoot.<Date>get("createdAt"), date)));
+        dateFromOpt.ifPresent(date -> predicates.add(cb.greaterThanOrEqualTo(blogArticleRoot.get("createdAt"), date)));
+        dateToOpt.ifPresent(date -> predicates.add(cb.lessThanOrEqualTo(blogArticleRoot.get("createdAt"), date)));
 
         cq.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
         cq.orderBy(cb.desc(blogArticleRoot.get("createdAt")));

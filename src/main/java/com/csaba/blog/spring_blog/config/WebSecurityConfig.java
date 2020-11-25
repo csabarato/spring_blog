@@ -1,9 +1,13 @@
 package com.csaba.blog.spring_blog.config;
 
 import com.csaba.blog.spring_blog.constants.Roles;
+import com.csaba.blog.spring_blog.filters.JwtRequestFilter;
+import com.csaba.blog.spring_blog.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -21,6 +25,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    JwtService jwtService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -34,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/h2-console").permitAll()
@@ -54,6 +62,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().permitAll()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login");
+
+        http.csrf().ignoringAntMatchers("/api/**");
+    }
+
+    @Bean
+    public FilterRegistrationBean<JwtRequestFilter> jwtRequestFilter() {
+
+        FilterRegistrationBean<JwtRequestFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new JwtRequestFilter(userDetailsService, jwtService));
+        registrationBean.addUrlPatterns("/api/user/*");
+        return registrationBean;
+    }
+
+    @Override
+    @Bean
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 
     @Override
