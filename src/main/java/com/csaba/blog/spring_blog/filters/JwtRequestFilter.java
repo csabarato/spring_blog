@@ -1,5 +1,6 @@
 package com.csaba.blog.spring_blog.filters;
 
+import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.service.JwtService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -49,6 +50,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if (!((BlogUser) userDetails).isAdmin()) {
+                response.sendError(405, "You haven't got admin role!");
+                return;
+            }
 
             if (jwtService.validateToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

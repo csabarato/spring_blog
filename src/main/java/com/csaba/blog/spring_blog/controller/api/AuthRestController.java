@@ -2,6 +2,7 @@ package com.csaba.blog.spring_blog.controller.api;
 
 import com.csaba.blog.spring_blog.dto.AuthRequestDto;
 import com.csaba.blog.spring_blog.dto.AuthResponseDto;
+import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,10 @@ public class AuthRestController {
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequestDto.getUsername());
+
+        if (!((BlogUser) userDetails).isAdmin()) {
+            return ResponseEntity.status(405).body("You haven't got admin role!");
+        }
 
         final String jwt = jwtService.generateToken(userDetails);
         return ResponseEntity.ok(new AuthResponseDto(userDetails.getUsername(), jwt));
