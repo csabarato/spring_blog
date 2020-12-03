@@ -33,10 +33,13 @@ public class AuthController {
     @GetMapping("/login")
     public String login(BlogUser user, @RequestParam(name = "error", required = false) String error, Model model) {
 
-        if (error != null) {
-            model.addAttribute("error", "Login failed: Invalid credentials");
-        }
+        return "auth/login";
+    }
 
+    @GetMapping("/login/error")
+    public String loginError(BlogUser blogUser, Model model) {
+
+        model.addAttribute("error", "Login failed");
         return "auth/login";
     }
 

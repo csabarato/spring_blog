@@ -65,4 +65,10 @@ public class UserController {
         userService.save(currentUser, file);
         return "redirect:/user/profile/"+ currentUser.getUsername();
     }
+
+    @GetMapping("/block/{id}")
+    public String blockUser(@PathVariable Long id) throws BlogException {
+        userService.setUserEnabled(id);
+        return "redirect:/user/list";
+    }
 }

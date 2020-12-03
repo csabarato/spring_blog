@@ -1,6 +1,7 @@
 package com.csaba.blog.spring_blog.service;
 
 import com.csaba.blog.spring_blog.model.BlogUser;
+import com.csaba.blog.spring_blog.util.BlogException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,4 +19,6 @@ public interface UserService extends UserDetailsService {
     List<BlogUser> findAll();
 
     BlogUser save(BlogUser user, MultipartFile file) throws IOException;
+
+    void setUserEnabled(Long userId) throws BlogException;
 }

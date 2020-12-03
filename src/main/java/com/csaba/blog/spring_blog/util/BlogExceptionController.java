@@ -36,6 +36,18 @@ public class BlogExceptionController {
             model.addObject("code_message",HttpStatus.NOT_FOUND.getReasonPhrase());
         }
 
+        if (BlogErrorType.EC_BLOCK_USER_DISALLOWED.equals(blogEx.getErrorType())) {
+            model.addObject("error_msg", "You dont't have permissions to block users.");
+            model.addObject("code",HttpStatus.METHOD_NOT_ALLOWED.value());
+            model.addObject("code_message",HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
+        }
+
+        if (BlogErrorType.EC_USER_IS_BLOCKED.equals(blogEx.getErrorType())) {
+            model.addObject("error_msg", "You can't login, you are blocked.");
+            model.addObject("code",HttpStatus.METHOD_NOT_ALLOWED.value());
+            model.addObject("code_message",HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
+        }
+
         return model;
     }
 

@@ -8,6 +8,7 @@
 
 <div class="container">
 </div>
+<!--/*@thymesVar id="user" type="com.csaba.blog.spring_blog.model.BlogUser"*/-->
 <div th:each="user: ${users}" class="card" style="width: 30%; padding: 20px; margin: 40px">
     <div class="card-body">
 
@@ -30,13 +31,13 @@
 
         <div th:if="${(#authentication.getName() == user.username )}">
             <a class="btn btn-secondary" data-toggle="collapse" href="#profilePicCollapse" role="button" aria-expanded="false" aria-controls="profilePicCollapse"
-               style="margin: 10px">
+               style="margin-top: 10px; margin-bottom: 10px">
                 Edit profile picture
             </a>
             <div class="text-danger" th:if="${profilePicError}" th:text="${profilePicError}">pic error</div>
         </div>
 
-        <div class="collapse" id="profilePicCollapse">
+        <div class="collapse" id="profilePicCollapse" th:if="${(#authentication.getName() == user.username )}">
 
             <form
                   method="post" enctype="multipart/form-data"
@@ -46,6 +47,15 @@
                 <input type="file" name="file" />
                 <button type="submit" class="btn btn-primary">Upload</button>
             </form>
+        </div>
+
+        <div th:if="${(#authentication.getName() != user.username )}">
+                <a href="#" th:href="'/user/block/' + ${user.id}"
+                   th:classappend="${user.enabled} ? 'btn btn-danger' : 'btn btn-primary'"
+                   th:text="${user.enabled} ? 'Block user' : 'Enable user'"
+                   style="margin-top: 10px; margin-bottom: 10px">
+                Block user
+                </a>
         </div>
     </div>
 

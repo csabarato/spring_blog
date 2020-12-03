@@ -1,10 +1,13 @@
 package com.csaba.blog.spring_blog.service.impl;
 
+import com.csaba.blog.spring_blog.constants.BlogErrorType;
 import com.csaba.blog.spring_blog.constants.Roles;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.repository.RoleRepository;
 import com.csaba.blog.spring_blog.repository.UserRepostitory;
 import com.csaba.blog.spring_blog.service.UserService;
+import com.csaba.blog.spring_blog.util.AuthUtils;
+import com.csaba.blog.spring_blog.util.BlogException;
 import com.csaba.blog.spring_blog.util.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -85,5 +88,22 @@ public class UserServiceImpl implements UserService {
         user.setProfilePic(ImageUtils.resizeImage(file));
 
         return userRepostitory.save(user);
+    }
+
+    @Override
+    public void setUserEnabled(Long userId) throws BlogException {
+        if (!AuthUtils.getCurrentUser().isAdmin()) {
+            throw new BlogException(BlogErrorType.EC_BLOCK_USER_DISALLOWED);
+        }
+
+        Optional<BlogUser> userOpt = userRepostitory.findById(userId);
+        if (userOpt.isEmpty()) {
+            throw new BlogException(BlogErrorType.EC_USER_NOT_FOUND);
+        }
+
+        BlogUser user  = userOpt.get();
+
+        user.setEnabled(!user.isEnabled());
+        userRepostitory.save(user);
     }
 }
