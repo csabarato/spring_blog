@@ -44,6 +44,13 @@ public class UserController {
     public String getUsers(Model model) {
 
         model.addAttribute("users",userService.findAll());
+
+        BlogUser user = AuthUtils.getCurrentUser();
+        if (user.getProfilePic() != null) {
+            String image = Base64.getEncoder().encodeToString(user.getProfilePic());
+            model.addAttribute("image", image);
+        }
+
         return "profile";
     }
 

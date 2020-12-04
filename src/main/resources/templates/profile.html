@@ -1,4 +1,4 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div th:replace="fragments/header :: header (title='User profile')"></div>
 
@@ -12,7 +12,7 @@
 <div th:each="user: ${users}" class="card" style="width: 30%; padding: 20px; margin: 40px">
     <div class="card-body">
 
-        <div th:if="${image}">
+        <div th:if="${image != null and #authentication.getName() == user.username }">
             <img th:src="*{'data:image/png;base64,'+image}" alt="profile pic">
         </div>
 
@@ -49,7 +49,7 @@
             </form>
         </div>
 
-        <div th:if="${(#authentication.getName() != user.username )}">
+        <div sec:authorize="hasAuthority('ROLE_ADMIN')" th:if="${(#authentication.getName() != user.username )}">
                 <a href="#" th:href="'/user/block/' + ${user.id}"
                    th:classappend="${user.enabled} ? 'btn btn-danger' : 'btn btn-primary'"
                    th:text="${user.enabled} ? 'Block user' : 'Enable user'"
