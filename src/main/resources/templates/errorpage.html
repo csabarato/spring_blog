@@ -6,8 +6,8 @@
 <body>
 <div class="container">
     <div class="alert alert-danger">
-        <div th:text="'Error: ' + ${error_msg}">error</div>
-        <div th:text="${code} + ' : '+ ${code_message} " >error</div>
+        <div th:if="${error_msg}" th:text="'Error: ' + ${error_msg}">error</div>
+        <div th:text="${code} + ' : '+ ${code_message} ">error</div>
     </div>
 
 </div>
