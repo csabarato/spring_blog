@@ -1,7 +1,7 @@
 package com.csaba.blog.spring_blog.controller.api;
 
-import com.csaba.blog.spring_blog.dto.AuthRequestDto;
-import com.csaba.blog.spring_blog.dto.AuthResponseDto;
+import com.csaba.blog.spring_blog.dto.requestDto.AuthRequestDto;
+import com.csaba.blog.spring_blog.dto.requestDto.AuthResponseDto;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;

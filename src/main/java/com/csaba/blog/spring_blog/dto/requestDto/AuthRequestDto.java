@@ -1,4 +1,4 @@
-package com.csaba.blog.spring_blog.dto;
+package com.csaba.blog.spring_blog.dto.requestDto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

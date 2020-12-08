@@ -89,7 +89,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         FilterRegistrationBean<JwtRequestFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new JwtRequestFilter(userDetailsService, jwtService));
-        registrationBean.addUrlPatterns("/api/user/*");
+        registrationBean.addUrlPatterns("/api/user/*", "/api/articles/*");
         return registrationBean;
     }
 
