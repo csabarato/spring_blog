@@ -23,6 +23,8 @@ public class BlogArticle extends AuditableEntity<String> {
     private String title;
 
     @NotEmpty(message = "Blog article text cannot be empty")
+    @Lob
+    @Column(name = "text", length = 1024)
     private String text;
 
     @ManyToMany(fetch = FetchType.EAGER)
