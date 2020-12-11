@@ -10,6 +10,8 @@ INSERT IGNORE INTO spring_blog.category (name) VALUES ('Gastronomy');
 INSERT IGNORE INTO spring_blog.category (name) VALUES ('Music');
 INSERT IGNORE INTO spring_blog.category (name) VALUES ('Gaming');
 
+
+-- Insert Users with Roles
 INSERT INTO spring_blog.blog_user (email, password, username, enabled, birthdate)
 
     SELECT 'test@admin.com', '$2y$12$FLqrvKbHurHrSVotL/QFvO1Jd.WsdImcFuEWNZ1OJpZhn3yI3I13u', 'admin', TRUE, sysdate()
@@ -33,6 +35,7 @@ WHERE NOT EXISTS(SELECT 1 FROM  spring_blog.blog_user_roles
                          role_id =  (SELECT  id FROM role WHERE name = 'ROLE_USER'));
 
 
+-- Insert Articles
 INSERT INTO spring_blog.blog_article (id, created_at, created_by, last_modified_at, last_modified_by, text, title, author_id)
  select null , '2020-12-09 18:51:02.704000000', 'admin', '2020-12-09 18:51:49.203000000', 'admin', 'Sajt torta recept:
 - tojás
@@ -72,3 +75,43 @@ WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Töltöt
 
     INSERT IGNORE INTO spring_blog.blog_article_categories
         SELECT (SELECT id FROM blog_article WHERE title = 'Sajt'), 'Gastronomy';
+
+-- Add Comments
+
+    INSERT IGNORE INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
+        SELECT sysdate(), 'user', sysdate(), 'user', 'Porcukor is kell hozzá',
+               (SELECT id FROM blog_article WHERE title = 'sajt' LIMIT 1),
+               (SELECT id FROM blog_user WHERE username = 'user')
+        WHERE NOT EXISTS(SELECT 1 FROM comment
+            WHERE text = 'Porcukor is kell hozzá' LIMIT 1);
+
+     INSERT IGNORE INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
+        SELECT sysdate(), 'admin', sysdate(), 'admin', 'Ok, köszönöm!',
+               (SELECT id FROM blog_article WHERE title = 'sajt' LIMIT 1),
+               (SELECT id FROM blog_user WHERE username = 'admin')
+        WHERE NOT EXISTS(SELECT 1 FROM comment
+            WHERE text = 'Ok, köszönöm!');
+
+-- Add comment likes
+
+    INSERT IGNORE INTO comment_user_likes
+        VALUES (
+            (SELECT id FROM comment WHERE text = 'Porcukor is kell hozzá' LIMIT 1) ,
+            (SELECT id FROM blog_user WHERE username = 'admin'));
+
+    INSERT IGNORE INTO comment_user_likes
+        VALUES (
+           (SELECT id FROM comment WHERE text = 'Ok, köszönöm!' LIMIT 1) ,
+           (SELECT id FROM blog_user WHERE username = 'user'));
+
+-- Add article likes
+
+    INSERT IGNORE INTO article_user_likes
+        VALUES (
+           (SELECT id FROM blog_article WHERE title = 'Sajt' LIMIT 1) ,
+           (SELECT id FROM blog_user WHERE username = 'user'));
+
+    INSERT IGNORE INTO article_user_likes
+        VALUES (
+           (SELECT id FROM blog_article WHERE title = 'Töltött káposzta User módra' LIMIT 1) ,
+           (SELECT id FROM blog_user WHERE username = 'admin'));
