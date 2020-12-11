@@ -1,14 +1,8 @@
 package com.csaba.blog.spring_blog.config;
 
 import com.csaba.blog.spring_blog.constants.Roles;
-import com.csaba.blog.spring_blog.model.BlogArticle;
-import com.csaba.blog.spring_blog.model.BlogUser;
-import com.csaba.blog.spring_blog.model.Category;
-import com.csaba.blog.spring_blog.model.Role;
-import com.csaba.blog.spring_blog.repository.BlogArticleRepository;
-import com.csaba.blog.spring_blog.repository.CategoryRepository;
-import com.csaba.blog.spring_blog.repository.RoleRepository;
-import com.csaba.blog.spring_blog.repository.UserRepostitory;
+import com.csaba.blog.spring_blog.model.*;
+import com.csaba.blog.spring_blog.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,39 +28,60 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
 
     private CategoryRepository categoryRepository;
 
+    private CommentRepository commentRepository;
+
     private PasswordEncoder passwordEncoder;
 
     private BlogArticleRepository blogArticleRepository;
 
+    private Comment h2Comment;
 
-    @Value("${default.username}")
-    private String username;
+    private Comment test1Comment;
 
-    @Value("${default.email}")
-    private String email;
+    @Value("${default.admin.username}")
+    private String adminUsername;
 
-    @Value("${default.password}")
-    private String password;
+    @Value("${default.admin.email}")
+    private String adminEmail;
+
+    @Value("${default.admin.password}")
+    private String adminPassword;
+
+    @Value("${default.user.username}")
+    private String userUsername;
+
+    @Value("${default.user.email}")
+    private String userEmail;
+
+    @Value("${default.user.password}")
+    private String userPassword;
+
+    private BlogArticle h2Article;
+    private BlogArticle testArticle1;
 
     @Autowired
     public DefaultUserDataSetup(UserRepostitory userRepostitory,RoleRepository roleRepository,
                                 CategoryRepository categoryRepository,
                                 BlogArticleRepository blogArticleRepository,
-                                PasswordEncoder passwordEncoder) {
+                                PasswordEncoder passwordEncoder,
+                                CommentRepository commentRepository) {
         this.userRepostitory = userRepostitory;
         this.roleRepository = roleRepository;
         this.categoryRepository = categoryRepository;
         this.blogArticleRepository = blogArticleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.commentRepository = commentRepository;
     }
 
     private boolean isUserAlreadySetup = false;
     private boolean isRolesAlreadySetup = false;
     private boolean isCategoriesAlreadySetup = false;
     private boolean isArticlesAlreadySetup = false;
+    private boolean isCommentsAlreadySetup = false;
+    private boolean isArticleLikesAlreadySetup = false;
 
-    private BlogUser user1 = null;
-    private BlogUser user2 = null;
+    private BlogUser admin = null;
+    private BlogUser user = null;
     private List<Category> categories = null;
 
     @Override
@@ -89,29 +104,40 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
             createArticles();
         }
 
+        if (!isCommentsAlreadySetup) {
+            createComments();
+        }
+
+        if (!isArticleLikesAlreadySetup) {
+            createArticleLikes();
+        }
     }
 
     private void createUsers() {
 
-        user1 = new BlogUser();
+        // Create admin
+        admin = new BlogUser();
 
-        user1.setUsername(username);
-        user1.setEmail(email);
-        user1.setPassword(passwordEncoder.encode(password));
+        admin.setUsername(adminUsername);
+        admin.setEmail(adminEmail);
+        admin.setPassword(passwordEncoder.encode(adminPassword));
 
         Role roleAdmin = roleRepository.findByName(Roles.ROLE_ADMIN.name());
-        user1.setRoles(new HashSet<>(Collections.singletonList(roleAdmin)));
+        admin.setRoles(new HashSet<>(Collections.singletonList(roleAdmin)));
+        admin.setEnabled(true);
 
-        user1 = userRepostitory.save(user1);
+        admin = userRepostitory.save(admin);
 
-        user2 = new BlogUser();
+        // Create User
+        user = new BlogUser();
 
-        user2.setUsername("user");
-        user2.setEmail("user@user.com");
-        user2.setPassword(passwordEncoder.encode("asd"));
-        user2.setRoles(new HashSet<>(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name()))));
+        user.setUsername(userUsername);
+        user.setEmail(userEmail);
+        user.setPassword(passwordEncoder.encode(userPassword));
+        user.setRoles(new HashSet<>(Collections.singletonList(roleRepository.findByName(Roles.ROLE_USER.name()))));
+        user.setEnabled(true);
 
-        user2 = userRepostitory.save(user2);
+        user = userRepostitory.save(user);
 
         isUserAlreadySetup = true;
     }
@@ -138,26 +164,70 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
 
     private void createArticles() {
 
-        BlogArticle article = new BlogArticle();
+        Set<Category> article1Categories =
+                new HashSet<>(Arrays.asList(categoryRepository.findByName("Sport"),
+                        categoryRepository.findByName("Lifestyle")));
 
-        article.setTitle("test 1");
-        article.setText("test test asd");
-        article.setAuthor(user1);
-        article.setCreatedAt(new Date());
-        article.setCategories(new HashSet<>(Arrays.asList(categories.get(0), categories.get(1))));
+        h2Article = saveArticle(
+                "H2 database connection", "Ez a cikk az embedded H2 db-ből van :)",
+                admin, article1Categories);
 
-        blogArticleRepository.save(article);
+        h2Article.setLikedBy(new HashSet<>());
+        h2Article.getLikedBy().add(admin);
 
-        BlogArticle article2 = new BlogArticle();
+        Set<Category> article2Categories =
+                new HashSet<>(Arrays.asList(categoryRepository.findByName("Gastronomy"),
+                        categoryRepository.findByName("Lifestyle")));
 
-        article2.setTitle("test 2");
-        article2.setText("test test qwe");
-        article2.setAuthor(user2);
-        article2.setCreatedAt(new Date());
-        article2.setCategories(new HashSet<>(Arrays.asList(categories.get(2), categories.get(3))));
-
-        blogArticleRepository.save(article2);
+        testArticle1 = saveArticle(
+                "Test Article 1", "This is a test article",
+                user, article2Categories);
 
         isArticlesAlreadySetup = true;
     }
+
+    private BlogArticle saveArticle(String title, String text, BlogUser author, Set<Category> categories) {
+
+        BlogArticle article = new BlogArticle();
+
+        article.setTitle(title);
+        article.setText(text);
+        article.setAuthor(author);
+        article.setCreatedAt(new Date());
+        article.setCategories(categories);
+
+        return blogArticleRepository.save(article);
+
+    }
+
+    private void createComments() {
+
+        h2Comment = saveComment(h2Article, admin, "H2 is good for testing your application");
+        test1Comment = saveComment(testArticle1, user, "Test comment 1");
+
+        isCommentsAlreadySetup = true;
+    }
+
+    private Comment saveComment(BlogArticle blogArticle, BlogUser user, String text) {
+
+        Comment comment = new Comment();
+        comment.setBlogArticle(blogArticle);
+        comment.setBlogUser(user);
+        comment.setText(text);
+
+        return commentRepository.save(comment);
+    }
+
+    private void createArticleLikes() {
+
+        h2Article.setLikedBy(new HashSet<>(Arrays.asList(user)));
+
+        testArticle1.setLikedBy(new HashSet<>(Arrays.asList(admin)));
+
+        blogArticleRepository.save(h2Article);
+        blogArticleRepository.save(testArticle1);
+
+        isArticleLikesAlreadySetup = true;
+    }
+
 }
