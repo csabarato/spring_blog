@@ -22,9 +22,10 @@ SZTE Programterzező informatika - 5. félév
 Add meg az adatbázis kapcsolódáshoz szükséges adatokat:<br>
 `spring.datasource.username`:`"your_username"`<br>
 `spring.datasource.password`:`"your_password"`
+ - Írd át a `jwt.secret`-et, tetszőleges secret string-re
+
  - Futtatás, localhost elérés : `localhost/8080/login`
 
- - Írd át a `jwt.secret`-et, tetszőleges secret string-re
 
 ### Bejelentkezés a default userekkel
 
