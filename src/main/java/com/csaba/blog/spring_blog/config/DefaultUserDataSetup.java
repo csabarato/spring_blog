@@ -18,7 +18,7 @@ import java.util.*;
 
 @Configuration
 @Profile("dev")
-@PropertySource("application-dev.properties")
+@PropertySource("classpath:application-dev.properties")
 @Slf4j
 public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshedEvent> {
 

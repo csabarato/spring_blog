@@ -1,32 +1,26 @@
-package com.csaba.blog.spring_blog.test.ut;
+package com.csaba.blog.spring_blog.ut;
 
 
 import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.repository.BlogArticleRepository;
 import com.csaba.blog.spring_blog.service.impl.BlogArticleServiceImpl;
-import com.csaba.blog.spring_blog.test.ut.utils.ArticleTestUtil;
-import com.csaba.blog.spring_blog.test.ut.utils.UserTestUtil;
+import com.csaba.blog.spring_blog.ut.utils.ArticleTestUtil;
+import com.csaba.blog.spring_blog.ut.utils.UserTestUtil;
 import com.csaba.blog.spring_blog.util.AuthUtils;
 import com.csaba.blog.spring_blog.util.BlogException;
 import lombok.extern.java.Log;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 @Log
@@ -41,7 +35,7 @@ public class BlogArticleServiceTest {
     private static MockedStatic<AuthUtils> authUtils;
 
     @BeforeAll
-    private static void init() {
+    public static void init() {
         authUtils = Mockito.mockStatic(AuthUtils.class);
     }
 
@@ -50,13 +44,13 @@ public class BlogArticleServiceTest {
 
         List<BlogArticle> testArticles = createTestArticles();
 
-        when(blogArticleRepository.findAll(any(Sort.class))).thenReturn(testArticles);
+        Mockito.when(blogArticleRepository.findAll(ArgumentMatchers.any(Sort.class))).thenReturn(testArticles);
 
         List<BlogArticle> blogArticles = blogArticleServiceImpl.findAll();
 
-        assertNotNull(blogArticles);
-        Assert.assertEquals(3, blogArticles.size());
-        assertEquals(testArticles, blogArticles);
+        Assertions.assertNotNull(blogArticles);
+        Assertions.assertEquals(3, blogArticles.size());
+        Assertions.assertEquals(testArticles, blogArticles);
     }
 
     @Test
@@ -67,13 +61,13 @@ public class BlogArticleServiceTest {
         authUtils.when(AuthUtils::getCurrentUser).thenReturn(admin);
         BlogArticle art1 = ArticleTestUtil.createArticle("ASD");
 
-        when(blogArticleRepository.save(any(BlogArticle.class))).thenReturn(art1);
+        Mockito.when(blogArticleRepository.save(ArgumentMatchers.any(BlogArticle.class))).thenReturn(art1);
 
         Assertions.assertDoesNotThrow(
                 () -> {
                 BlogArticle resultArt = blogArticleServiceImpl.save(art1, false);
-                assertNotNull(resultArt.getAuthor());
-                assertEquals(admin, resultArt.getAuthor());
+                Assertions.assertNotNull(resultArt.getAuthor());
+                Assertions.assertEquals(admin, resultArt.getAuthor());
                 });
     }
 
@@ -85,17 +79,17 @@ public class BlogArticleServiceTest {
 
         authUtils.when(AuthUtils::getCurrentUser).thenReturn(admin);
 
-        when(blogArticleRepository.findById(any())).thenReturn(Optional.of(adminsArticle));
+        Mockito.when(blogArticleRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(adminsArticle));
 
         BlogArticle updatedArticle = ArticleTestUtil.createArticle("updated");
         updatedArticle.setText("updated text");
 
-        when(blogArticleRepository.save(any(BlogArticle.class))).thenReturn(adminsArticle);
+        Mockito.when(blogArticleRepository.save(ArgumentMatchers.any(BlogArticle.class))).thenReturn(adminsArticle);
 
         BlogArticle resultArticle = blogArticleServiceImpl.save(updatedArticle, true);
 
-        assertEquals("updated", resultArticle.getTitle());
-        assertEquals(admin, resultArticle.getAuthor());
+        Assertions.assertEquals("updated", resultArticle.getTitle());
+        Assertions.assertEquals(admin, resultArticle.getAuthor());
     }
 
     @Test
@@ -108,11 +102,11 @@ public class BlogArticleServiceTest {
 
         authUtils.when(AuthUtils::getCurrentUser).thenReturn(user);
 
-        when(blogArticleRepository.findById(any())).thenReturn(Optional.of(adminsArticle));
+        Mockito.when(blogArticleRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(adminsArticle));
 
-        assertThrows("User not allowed to edit this article",
-                BlogException.class,
-                () -> blogArticleServiceImpl.save(adminsArticle, true));
+        Assertions.assertThrows(
+                BlogException.class, () -> blogArticleServiceImpl.save(adminsArticle, true),
+                "User not allowed to edit this article");
     }
 
     @Test
@@ -122,11 +116,12 @@ public class BlogArticleServiceTest {
         BlogArticle adminsArticle = ArticleTestUtil.createArticle("admins", admin);
 
         authUtils.when(AuthUtils::getCurrentUser).thenReturn(admin);
-        when(blogArticleRepository.findById(any())).thenReturn(Optional.empty());
+        Mockito.when(blogArticleRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
 
-        assertThrows("Blog article not found with provided ID",
+        Assertions.assertThrows(
                 BlogException.class,
-                () -> blogArticleServiceImpl.save(adminsArticle, true));
+                () -> blogArticleServiceImpl.save(adminsArticle, true),
+                "Blog article not found with provided ID");
     }
 
     private List<BlogArticle> createTestArticles() {

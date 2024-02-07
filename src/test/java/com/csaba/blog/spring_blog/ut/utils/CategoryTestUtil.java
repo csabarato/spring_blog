@@ -1,4 +1,4 @@
-package com.csaba.blog.spring_blog.test.ut.utils;
+package com.csaba.blog.spring_blog.ut.utils;
 
 import com.csaba.blog.spring_blog.model.Category;
 
