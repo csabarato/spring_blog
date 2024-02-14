@@ -1,14 +1,14 @@
 
 
-INSERT  INTO spring_blog.role (name) VALUES ('ROLE_USER');
-INSERT  INTO spring_blog.role (name) VALUES ('ROLE_ADMIN');
-INSERT  INTO spring_blog.role (name) VALUES ('ROLE_GUEST');
+INSERT IGNORE INTO spring_blog.role (name) VALUES ('ROLE_USER');
+INSERT IGNORE INTO spring_blog.role (name) VALUES ('ROLE_ADMIN');
+INSERT IGNORE INTO spring_blog.role (name) VALUES ('ROLE_GUEST');
 
-INSERT  INTO spring_blog.category (name) VALUES ('Sport');
-INSERT  INTO spring_blog.category (name) VALUES ('Lifestyle');
-INSERT  INTO spring_blog.category (name) VALUES ('Gastronomy');
-INSERT  INTO spring_blog.category (name) VALUES ('Music');
-INSERT  INTO spring_blog.category (name) VALUES ('Gaming');
+INSERT IGNORE INTO spring_blog.category (name) VALUES ('Sport');
+INSERT IGNORE INTO spring_blog.category (name) VALUES ('Lifestyle');
+INSERT IGNORE INTO spring_blog.category (name) VALUES ('Gastronomy');
+INSERT IGNORE INTO spring_blog.category (name) VALUES ('Music');
+INSERT IGNORE INTO spring_blog.category (name) VALUES ('Gaming');
 
 
 -- Insert Users with Roles
@@ -62,30 +62,30 @@ WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Töltöt
 
 -- Add categories to Articles
 
-    INSERT  INTO spring_blog.blog_article_categories
+    INSERT IGNORE INTO spring_blog.blog_article_categories
         SELECT (SELECT id FROM blog_article WHERE title = 'Rakott krumpli'), 'Gastronomy';
 
-    INSERT  INTO spring_blog.blog_article_categories
+    INSERT IGNORE INTO spring_blog.blog_article_categories
         SELECT (SELECT id FROM blog_article WHERE title = 'Töltött káposzta User módra'), 'Gastronomy';
 
 
-    INSERT  INTO spring_blog.blog_article_categories
+    INSERT IGNORE INTO spring_blog.blog_article_categories
         SELECT (SELECT id FROM blog_article WHERE title = 'Töltött káposzta User módra'), 'Lifestyle';
 
 
-    INSERT  INTO spring_blog.blog_article_categories
+    INSERT IGNORE INTO spring_blog.blog_article_categories
         SELECT (SELECT id FROM blog_article WHERE title = 'Sajt'), 'Gastronomy';
 
 -- Add Comments
 
-    INSERT  INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
+    INSERT IGNORE INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
         SELECT sysdate(), 'user', sysdate(), 'user', 'Porcukor is kell hozzá',
                (SELECT id FROM blog_article WHERE title = 'sajt' LIMIT 1),
                (SELECT id FROM blog_user WHERE username = 'user')
         WHERE NOT EXISTS(SELECT 1 FROM comment
             WHERE text = 'Porcukor is kell hozzá' LIMIT 1);
 
-     INSERT  INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
+     INSERT IGNORE INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
         SELECT sysdate(), 'admin', sysdate(), 'admin', 'Ok, köszönöm!',
                (SELECT id FROM blog_article WHERE title = 'sajt' LIMIT 1),
                (SELECT id FROM blog_user WHERE username = 'admin')
@@ -94,24 +94,24 @@ WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Töltöt
 
 -- Add comment likes
 
-    INSERT  INTO comment_user_likes
+    INSERT IGNORE INTO comment_user_likes
         VALUES (
             (SELECT id FROM comment WHERE text = 'Porcukor is kell hozzá' LIMIT 1) ,
             (SELECT id FROM blog_user WHERE username = 'admin'));
 
-    INSERT  INTO comment_user_likes
+    INSERT IGNORE INTO comment_user_likes
         VALUES (
            (SELECT id FROM comment WHERE text = 'Ok, köszönöm!' LIMIT 1) ,
            (SELECT id FROM blog_user WHERE username = 'user'));
 
 -- Add article likes
 
-    INSERT  INTO article_user_likes
+    INSERT IGNORE INTO article_user_likes
         VALUES (
            (SELECT id FROM blog_article WHERE title = 'Sajt' LIMIT 1) ,
            (SELECT id FROM blog_user WHERE username = 'user'));
 
-    INSERT  INTO article_user_likes
+    INSERT IGNORE INTO article_user_likes
         VALUES (
            (SELECT id FROM blog_article WHERE title = 'Töltött káposzta User módra' LIMIT 1) ,
            (SELECT id FROM blog_user WHERE username = 'admin'));
