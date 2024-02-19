@@ -18,7 +18,7 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract  class AuditableEntity<T> implements Serializable {
+public abstract class AuditableEntity implements Serializable {
 
     @CreatedDate
     @Column(updatable = false)
@@ -29,9 +29,8 @@ public abstract  class AuditableEntity<T> implements Serializable {
 
     @CreatedBy
     @Column(updatable = false)
-    private T createdBy;
+    private String createdBy;
 
     @LastModifiedBy
-    private T lastModifiedBy;
-
+    private String lastModifiedBy;
 }

@@ -1,8 +1,8 @@
 package com.csaba.blog.spring_blog.controller;
 
+import com.csaba.blog.spring_blog.dto.UserDto;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -23,31 +23,31 @@ import java.util.Date;
 @Controller
 public class AuthController {
 
-    private UserService userServiceImpl;
+    private final UserService userServiceImpl;
 
-    @Autowired
     public AuthController(UserService userService) {
         this.userServiceImpl = userService;
     }
 
     @GetMapping("/login")
-    public String login(BlogUser user, @RequestParam(name = "error", required = false) String error, Model model) {
+    public String login(UserDto user, @RequestParam(name = "error", required = false) String error, Model model) {
 
         return "auth/login";
     }
 
     @GetMapping("/login/error")
-    public String loginError(BlogUser blogUser, Model model) {
+    public String loginError(UserDto blogUser, Model model) {
 
         model.addAttribute("error", "Login failed");
         return "auth/login";
     }
 
     @GetMapping("/register")
-    public String getRegisterForm(BlogUser user) {
+    public String getRegisterForm(UserDto user) {
         return "auth/register";
     }
 
+    // TODO: Change userToSave type to UserDto
     @PostMapping("/register")
     public String register(
             @RequestParam("file") MultipartFile file,

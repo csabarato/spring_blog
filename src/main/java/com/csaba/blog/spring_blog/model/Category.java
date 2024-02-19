@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class Category extends AuditableEntity<String> {
+public class Category extends AuditableEntity {
 
     @Id
     @Column(unique = true)

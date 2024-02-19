@@ -10,6 +10,8 @@ import java.io.IOException;
 
 public class ImageUtils {
 
+    private ImageUtils() {}
+
     public static byte[] resizeImage(MultipartFile file) throws IOException {
 
         BufferedImage originalImage = ImageIO.read(file.getInputStream());

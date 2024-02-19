@@ -9,7 +9,7 @@ public enum BlogErrorType {
     EC_BLOCK_USER_DISALLOWED(5),
     EC_USER_IS_BLOCKED(6);
 
-    public int errorCode;
+    public final int errorCode;
 
     BlogErrorType(int errorCode) {
         this.errorCode = errorCode;

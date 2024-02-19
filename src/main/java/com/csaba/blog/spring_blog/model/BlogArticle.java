@@ -13,7 +13,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class BlogArticle extends AuditableEntity<String> {
+public class BlogArticle extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class BlogArticle extends AuditableEntity<String> {
             joinColumns = @JoinColumn(name = "blog_article_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "category_name", referencedColumnName = "name")
     )
-    Set<Category> categories;
+    private Set<Category> categories;
 
     @ManyToOne
     private BlogUser author;

@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class Comment extends AuditableEntity<String> {
+public class Comment extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +34,5 @@ public class Comment extends AuditableEntity<String> {
     @JoinTable(name = "comment_user_likes",
             joinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "blog_user_id", referencedColumnName = "id"))
-    Set<BlogUser> likedBy;
+    private Set<BlogUser> likedBy;
 }

@@ -8,7 +8,6 @@ import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.repository.BlogArticleRepository;
 import com.csaba.blog.spring_blog.service.BlogArticleService;
 import com.csaba.blog.spring_blog.util.DateConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +21,8 @@ import java.util.function.Predicate;
 @Transactional
 public class BlogArticleServiceImpl implements BlogArticleService {
 
-    private BlogArticleRepository blogArticleRepository;
+    private final BlogArticleRepository blogArticleRepository;
 
-    @Autowired
     public BlogArticleServiceImpl(BlogArticleRepository blogArticleRepository) {
         this.blogArticleRepository = blogArticleRepository;
     }

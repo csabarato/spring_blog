@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Data
 @EqualsAndHashCode(exclude = {"articles"}, callSuper = false)
 @NoArgsConstructor
-public class BlogUser extends AuditableEntity<String> implements UserDetails {
+public class BlogUser extends AuditableEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

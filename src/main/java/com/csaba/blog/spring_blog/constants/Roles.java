@@ -6,7 +6,7 @@ public enum Roles {
     ROLE_USER("ROLE_USER"),
     ROLE_GUEST("ROLE_GUEST");
 
-    String name;
+    public final String name;
 
     Roles(String name) {
         this.name = name;

@@ -4,7 +4,6 @@ import com.csaba.blog.spring_blog.dto.requestDto.AuthRequestDto;
 import com.csaba.blog.spring_blog.dto.requestDto.AuthResponseDto;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.service.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,15 +16,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api", produces = "application/json")
 public class AuthRestController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    @Autowired
-    JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
+    public AuthRestController(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostMapping("/auth")
     public ResponseEntity<?> auth(@RequestBody AuthRequestDto authRequestDto) {

@@ -5,7 +5,6 @@ import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.service.UserService;
 import com.csaba.blog.spring_blog.util.AuthUtils;
 import com.csaba.blog.spring_blog.util.BlogException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,11 @@ import java.util.Base64;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/profile/{username}")
     public String getUserProfile(@PathVariable("username") String username , Model model) throws BlogException {
@@ -36,7 +38,6 @@ public class UserController {
             String image = Base64.getEncoder().encodeToString(user.getProfilePic());
             model.addAttribute("image", image);
         }
-
         return "profile";
     }
 

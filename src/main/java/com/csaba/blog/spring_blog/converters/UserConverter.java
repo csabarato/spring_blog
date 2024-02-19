@@ -23,7 +23,6 @@ public class UserConverter {
         }
 
         userDto.setRoles(blogUser.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
-
         return userDto;
     }
 }

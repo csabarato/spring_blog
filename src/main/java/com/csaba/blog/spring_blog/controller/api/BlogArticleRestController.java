@@ -16,11 +16,13 @@ import java.util.List;
 @RequestMapping(value = "/api/articles", produces = "application/json")
 public class BlogArticleRestController {
 
-    @Autowired
-    BlogArticleService blogArticleService;
+    private final BlogArticleService blogArticleService;
+    private final BlogArticleConverter blogArticleConverter;
 
-    @Autowired
-    BlogArticleConverter blogArticleConverter;
+    public BlogArticleRestController(BlogArticleService blogArticleService, BlogArticleConverter blogArticleConverter) {
+        this.blogArticleService = blogArticleService;
+        this.blogArticleConverter = blogArticleConverter;
+    }
 
     @GetMapping("/list")
     public List<BlogArticleDto> listArticles() {

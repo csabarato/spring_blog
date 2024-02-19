@@ -6,6 +6,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtils {
 
+    private AuthUtils() {
+    }
+
     public static BlogUser getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return  (BlogUser) auth.getPrincipal();

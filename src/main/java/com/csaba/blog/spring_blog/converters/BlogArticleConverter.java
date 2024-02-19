@@ -14,11 +14,13 @@ import java.util.stream.Collectors;
 @Component
 public class BlogArticleConverter {
 
-    @Autowired
-    CategoryService categoryService;
+    private final CategoryService categoryService;
+    private final UserService userService;
 
-    @Autowired
-    UserService userService;
+    public BlogArticleConverter(CategoryService categoryService, UserService userService) {
+        this.categoryService = categoryService;
+        this.userService = userService;
+    }
 
     public BlogArticleDto convertToBlogArticleDto(BlogArticle blogArticle) {
 
@@ -51,7 +53,7 @@ public class BlogArticleConverter {
 
             blogArticle.setCategories(
                     blogArticleDto.getCategories().stream()
-                        .map(categoryName -> categoryService.findByName(categoryName))
+                        .map(categoryService::findByName)
                         .collect(Collectors.toSet()));
         }
 

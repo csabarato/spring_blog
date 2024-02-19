@@ -20,11 +20,13 @@ import javax.validation.Valid;
 @RequestMapping("/comment")
 public class CommentController {
 
-    @Autowired
-    BlogArticleService blogArticleService;
+    private final BlogArticleService blogArticleService;
+    private final CommentService commentService;
 
-    @Autowired
-    CommentService commentService;
+    public CommentController(BlogArticleService blogArticleService, CommentService commentService) {
+        this.blogArticleService = blogArticleService;
+        this.commentService = commentService;
+    }
 
     @PostMapping("/{articleId}")
     private String addComment(@PathVariable Long articleId, @Valid Comment comment, BindingResult bindingResult, Model model) throws BlogException {
@@ -36,7 +38,6 @@ public class CommentController {
         }
 
         commentService.save(comment,articleId);
-
         return "redirect:/articles/get/"+ articleId;
     }
 
@@ -45,6 +46,4 @@ public class CommentController {
         commentService.addOrRemoveCommentLike(id);
         return "redirect:/articles/get/"+ articleId;
     }
-
-
 }

@@ -7,7 +7,6 @@ import com.csaba.blog.spring_blog.service.BlogArticleService;
 import com.csaba.blog.spring_blog.service.CategoryService;
 import com.csaba.blog.spring_blog.util.BlogException;
 import com.csaba.blog.spring_blog.util.CategoryPropEditor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,12 +18,14 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/articles")
 public class BlogArticleController {
+    private final BlogArticleService blogArticleService;
 
-    @Autowired
-    BlogArticleService blogArticleService;
+    private final CategoryService categoryService;
 
-    @Autowired
-    CategoryService categoryService;
+    public BlogArticleController(BlogArticleService blogArticleService, CategoryService categoryService) {
+        this.blogArticleService = blogArticleService;
+        this.categoryService = categoryService;
+    }
 
     @PostMapping("/list")
     public String listArticlesPost(Model model) {
@@ -33,17 +34,14 @@ public class BlogArticleController {
         return "articles/blog_articles";
     }
 
-
     @GetMapping("/list")
     public String listArticles(Model model) {
-
         model.addAttribute("articles", blogArticleService.findAll());
         return "articles/blog_articles";
     }
 
     @GetMapping("/new")
     public String getCreateArticleForm(BlogArticle blogArticle, Model model) {
-
         model.addAttribute("categories", categoryService.findAll());
         return "articles/create_article";
     }
@@ -57,7 +55,6 @@ public class BlogArticleController {
         }
 
         blogArticleService.save(blogArticle, false);
-
         return "redirect:list";
     }
 
@@ -82,9 +79,7 @@ public class BlogArticleController {
 
     @GetMapping("/delete/{id}")
     public String deleteArticle(@PathVariable Long id) throws BlogException {
-
         blogArticleService.deleteById(id);
-
         return "redirect:/articles/list";
     }
 
@@ -102,10 +97,7 @@ public class BlogArticleController {
             @RequestParam(name = "dateFrom", required = false) String dateFrom,
             @RequestParam(name = "dateTo", required = false) String dateTo) {
 
-
-
         model.addAttribute("articles", blogArticleService.searchByParams(title, author, text, dateFrom, dateTo));
-
         return "articles/blog_articles";
     }
 

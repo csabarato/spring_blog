@@ -3,7 +3,6 @@ package com.csaba.blog.spring_blog.config;
 import com.csaba.blog.spring_blog.constants.Roles;
 import com.csaba.blog.spring_blog.filters.JwtRequestFilter;
 import com.csaba.blog.spring_blog.service.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +28,14 @@ import java.io.IOException;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    JwtService jwtService;
+    private final JwtService jwtService;
+
+    public WebSecurityConfig(UserDetailsService userDetailsService, JwtService jwtService) {
+        this.userDetailsService = userDetailsService;
+        this.jwtService = jwtService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

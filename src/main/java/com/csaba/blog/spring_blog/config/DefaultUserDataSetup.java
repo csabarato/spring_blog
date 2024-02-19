@@ -22,21 +22,17 @@ import java.util.*;
 @Slf4j
 public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshedEvent> {
 
-    private UserRepostitory userRepostitory;
+    private final UserRepostitory userRepostitory;
 
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    private BlogArticleRepository blogArticleRepository;
-
-    private Comment h2Comment;
-
-    private Comment test1Comment;
+    private final BlogArticleRepository blogArticleRepository;
 
     @Value("${default.admin.username}")
     private String adminUsername;
@@ -82,7 +78,6 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
 
     private BlogUser admin = null;
     private BlogUser user = null;
-    private List<Category> categories = null;
 
     @Override
     @Transactional
@@ -152,13 +147,13 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
 
     private void createCategories() {
 
-         categories = Arrays.asList(
+         List<Category> categories = Arrays.asList(
                         new Category("Sport"),
                         new Category("Lifestyle"),
                         new Category("Gastronomy"),
                         new Category("Music"));
 
-        categories = categoryRepository.saveAll(categories);
+        categoryRepository.saveAll(categories);
         isCategoriesAlreadySetup = true;
     }
 
@@ -202,27 +197,25 @@ public class DefaultUserDataSetup implements ApplicationListener<ContextRefreshe
 
     private void createComments() {
 
-        h2Comment = saveComment(h2Article, admin, "H2 is good for testing your application");
-        test1Comment = saveComment(testArticle1, user, "Test comment 1");
-
+        saveComment(h2Article, admin, "H2 is good for testing your application");
+        saveComment(testArticle1, user, "Test comment 1");
         isCommentsAlreadySetup = true;
     }
 
-    private Comment saveComment(BlogArticle blogArticle, BlogUser user, String text) {
+    private void saveComment(BlogArticle blogArticle, BlogUser user, String text) {
 
         Comment comment = new Comment();
         comment.setBlogArticle(blogArticle);
         comment.setBlogUser(user);
         comment.setText(text);
-
-        return commentRepository.save(comment);
+        commentRepository.save(comment);
     }
 
     private void createArticleLikes() {
 
-        h2Article.setLikedBy(new HashSet<>(Arrays.asList(user)));
+        h2Article.setLikedBy(new HashSet<>(Collections.singletonList(user)));
 
-        testArticle1.setLikedBy(new HashSet<>(Arrays.asList(admin)));
+        testArticle1.setLikedBy(new HashSet<>(Collections.singletonList(admin)));
 
         blogArticleRepository.save(h2Article);
         blogArticleRepository.save(testArticle1);
