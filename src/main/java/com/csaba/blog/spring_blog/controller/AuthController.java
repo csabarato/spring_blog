@@ -1,6 +1,5 @@
 package com.csaba.blog.spring_blog.controller;
 
-import com.csaba.blog.spring_blog.dto.UserDto;
 import com.csaba.blog.spring_blog.model.BlogUser;
 import com.csaba.blog.spring_blog.service.UserService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -30,24 +29,23 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login(UserDto user, @RequestParam(name = "error", required = false) String error, Model model) {
+    public String login(BlogUser user, @RequestParam(name = "error", required = false) String error, Model model) {
 
         return "auth/login";
     }
 
     @GetMapping("/login/error")
-    public String loginError(UserDto blogUser, Model model) {
+    public String loginError(BlogUser blogUser, Model model) {
 
         model.addAttribute("error", "Login failed");
         return "auth/login";
     }
 
     @GetMapping("/register")
-    public String getRegisterForm(UserDto user) {
+    public String getRegisterForm(BlogUser user) {
         return "auth/register";
     }
 
-    // TODO: Change userToSave type to UserDto
     @PostMapping("/register")
     public String register(
             @RequestParam("file") MultipartFile file,

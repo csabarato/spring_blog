@@ -37,28 +37,28 @@ WHERE NOT EXISTS(SELECT 1 FROM  spring_blog.blog_user_roles
 
 -- Insert Articles
 INSERT INTO spring_blog.blog_article (id, created_at, created_by, last_modified_at, last_modified_by, text, title, author_id)
- select null , '2020-12-09 18:51:02.704000000', 'admin', '2020-12-09 18:51:49.203000000', 'admin', 'Sajt torta recept:
-- tojás
-- sajt
--cukor', 'Sajt', (SELECT id FROM spring_blog.blog_user WHERE username = 'admin')
+ select null , '2020-12-09 18:51:02.704000000', 'admin', '2020-12-09 18:51:49.203000000', 'admin', 'Cheese cake receipt:
+- eggs
+- cheese
+- sugar', 'Cheese cake', (SELECT id FROM spring_blog.blog_user WHERE username = 'admin')
 
-WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Sajt');
+WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Cheese cake');
 
 INSERT INTO spring_blog.blog_article (id, created_at, created_by, last_modified_at, last_modified_by, text, title, author_id)
-select null , (SELECT sysdate()), 'admin', (SELECT sysdate()), 'admin', 'Rakott krumpli recept:
-- krumpli
-- kolbász
-- tejföl', 'Rakott krumpli', (SELECT id FROM spring_blog.blog_user WHERE username = 'admin')
+select null , (SELECT sysdate()), 'admin', (SELECT sysdate()), 'admin', 'Hungarian Rakott krumpli receipt:
+- potatoes
+- sasusage
+- soured milk', 'Rakott krumpli', (SELECT id FROM spring_blog.blog_user WHERE username = 'admin')
 
 WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Rakott krumpli');
 
 INSERT INTO spring_blog.blog_article (id, created_at, created_by, last_modified_at, last_modified_by, text, title, author_id)
-select null , (SELECT sysdate()), 'user', (SELECT sysdate()), 'user', 'Töltött káposzta:
-- káposzta
-- darált hús
-- tejföl', 'Töltött káposzta User módra', (SELECT id FROM spring_blog.blog_user WHERE username = 'user')
+select null , (SELECT sysdate()), 'user', (SELECT sysdate()), 'user', 'Stuffed cabbage:
+- cabbage
+- pork
+- soured milk', 'Stuffed cabbage', (SELECT id FROM spring_blog.blog_user WHERE username = 'user')
 
-WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Töltött káposzta User módra');
+WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Stuffed cabbage');
 
 -- Add categories to Articles
 
@@ -66,52 +66,50 @@ WHERE NOT EXISTS (SELECT 1 FROM spring_blog.blog_article WHERE title = 'Töltöt
         SELECT (SELECT id FROM blog_article WHERE title = 'Rakott krumpli'), 'Gastronomy';
 
     INSERT IGNORE INTO spring_blog.blog_article_categories
-        SELECT (SELECT id FROM blog_article WHERE title = 'Töltött káposzta User módra'), 'Gastronomy';
-
-
-    INSERT IGNORE INTO spring_blog.blog_article_categories
-        SELECT (SELECT id FROM blog_article WHERE title = 'Töltött káposzta User módra'), 'Lifestyle';
-
+        SELECT (SELECT id FROM blog_article WHERE title = 'Stuffed cabbage'), 'Gastronomy';
 
     INSERT IGNORE INTO spring_blog.blog_article_categories
-        SELECT (SELECT id FROM blog_article WHERE title = 'Sajt'), 'Gastronomy';
+        SELECT (SELECT id FROM blog_article WHERE title = 'Stuffed cabbage'), 'Lifestyle';
+
+    INSERT IGNORE INTO spring_blog.blog_article_categories
+        SELECT (SELECT id FROM blog_article WHERE title = 'Cheese cake'), 'Gastronomy';
 
 -- Add Comments
 
     INSERT IGNORE INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
-        SELECT sysdate(), 'user', sysdate(), 'user', 'Porcukor is kell hozzá',
-               (SELECT id FROM blog_article WHERE title = 'sajt' LIMIT 1),
+        SELECT sysdate(), 'user', sysdate(), 'user', 'Sugar is needed also!',
+               (SELECT id FROM blog_article WHERE title = 'Cheese cake' LIMIT 1),
                (SELECT id FROM blog_user WHERE username = 'user')
         WHERE NOT EXISTS(SELECT 1 FROM comment
-            WHERE text = 'Porcukor is kell hozzá' LIMIT 1);
+            WHERE text = 'Sugar is needed also!' LIMIT 1);
 
      INSERT IGNORE INTO  spring_blog.comment(created_at, created_by, last_modified_at, last_modified_by, text, blog_article_id, blog_user_id)
-        SELECT sysdate(), 'admin', sysdate(), 'admin', 'Ok, köszönöm!',
-               (SELECT id FROM blog_article WHERE title = 'sajt' LIMIT 1),
+        SELECT sysdate(), 'admin', sysdate(), 'admin', 'Ok, Thanks!',
+               (SELECT id FROM blog_article WHERE title = 'Cheese cake' LIMIT 1),
                (SELECT id FROM blog_user WHERE username = 'admin')
         WHERE NOT EXISTS(SELECT 1 FROM comment
-            WHERE text = 'Ok, köszönöm!');
+            WHERE text = 'Ok, Thanks!');
 
 -- Add comment likes
 
     INSERT IGNORE INTO comment_user_likes
         VALUES (
-            (SELECT id FROM comment WHERE text = 'Porcukor is kell hozzá' LIMIT 1) ,
+            (SELECT id FROM comment WHERE text = 'Sugar is needed also!' LIMIT 1) ,
             (SELECT id FROM blog_user WHERE username = 'admin'));
 
     INSERT IGNORE INTO comment_user_likes
         VALUES (
-           (SELECT id FROM comment WHERE text = 'Ok, köszönöm!' LIMIT 1) ,
+           (SELECT id FROM comment WHERE text = 'Ok, Thanks!' LIMIT 1) ,
            (SELECT id FROM blog_user WHERE username = 'user'));
 
 -- Add article likes
 
     INSERT IGNORE INTO article_user_likes
         VALUES (
-           (SELECT id FROM blog_article WHERE title = 'Sajt' LIMIT 1) ,
+           (SELECT id FROM blog_article WHERE title = 'Cheese cake' LIMIT 1) ,
            (SELECT id FROM blog_user WHERE username = 'user'));
 
     INSERT IGNORE INTO article_user_likes
         VALUES (
-           (SELECT id FROM blog_article WHERE title = 'Töltött káposzta User módra' LIMIT 1) ,
+           (SELECT id FROM blog_article WHERE title = 'Stuffed cabbage' LIMIT 1) ,
            (SELECT id FROM blog_user WHERE username = 'admin'));

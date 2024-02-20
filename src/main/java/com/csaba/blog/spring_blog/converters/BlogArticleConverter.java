@@ -5,7 +5,6 @@ import com.csaba.blog.spring_blog.model.BlogArticle;
 import com.csaba.blog.spring_blog.model.Category;
 import com.csaba.blog.spring_blog.service.CategoryService;
 import com.csaba.blog.spring_blog.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
